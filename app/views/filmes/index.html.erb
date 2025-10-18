@@ -1,0 +1,21 @@
+<h1>Filmes</h1>
+
+<% if user_signed_in? %>
+  <%= link_to "Novo filme", new_filme_path, class: "btn btn-primary" %>
+<% end %>
+
+<div class="grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:16px;">
+  <% @filmes.each do |filme| %>
+    <div class="card" style="border:1px solid #eee;padding:12px;border-radius:10px;">
+      <h3><%= link_to filme.titulo, filme %></h3>
+      <p><strong>Diretor:</strong> <%= filme.diretor %></p>
+      <p><strong>Ano:</strong> <%= filme.ano_lancamento %></p>
+      <p><%= truncate(filme.sinopse, length: 120) %></p>
+      <small>Criado por: <%= filme.user&.name || "—" %></small>
+    </div>
+  <% end %>
+</div>
+
+<div style="margin-top:16px;">
+  <%= paginate @filmes %>
+</div>

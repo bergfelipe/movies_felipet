@@ -11,6 +11,21 @@
   </head>
 
   <body>
+  <p class="notice"><%= notice %></p>
+<p class="alert"><%= alert %></p>
+
+<nav>
+  <% if user_signed_in? %>
+    Olá, <%= current_user.name.presence || current_user.email %> |
+    <%= link_to "Meu perfil", edit_user_registration_path %> |
+    <%= link_to "Sair", destroy_user_session_path, method: :delete, data: { turbo: false } %>
+  <% else %>
+    <%= link_to "Entrar", new_user_session_path %> |
+    <%= link_to "Cadastrar", new_user_registration_path %>
+  <% end %>
+</nav>
+<hr>
+
     <%= yield %>
   </body>
 </html>

@@ -10,5 +10,44 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 0) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_18_170850) do
+  create_table "comentarios", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+    t.text "conteudo"
+    t.string "nome"
+    t.bigint "user_id", null: false
+    t.bigint "filme_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["filme_id"], name: "index_comentarios_on_filme_id"
+    t.index ["user_id"], name: "index_comentarios_on_user_id"
+  end
+
+  create_table "filmes", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+    t.string "titulo"
+    t.text "sinopse"
+    t.integer "ano_lancamento"
+    t.integer "duracao"
+    t.string "diretor"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_filmes_on_user_id"
+  end
+
+  create_table "users", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  add_foreign_key "comentarios", "filmes"
+  add_foreign_key "comentarios", "users"
+  add_foreign_key "filmes", "users"
 end

@@ -1,0 +1,58 @@
+<p><%= link_to "Voltar", filmes_path %></p>
+
+<h1><%= @filme.titulo %></h1>
+<ul>
+  <li><strong>Sinopse:</strong> <%= simple_format(@filme.sinopse) %></li>
+  <li><strong>Ano de lançamento:</strong> <%= @filme.ano_lancamento %></li>
+  <li><strong>Duração (min):</strong> <%= @filme.duracao %></li>
+  <li><strong>Diretor:</strong> <%= @filme.diretor %></li>
+</ul>
+
+<% if user_signed_in? && @filme.user_id == current_user.id %>
+  <p>
+    <%= link_to "Editar", edit_filme_path(@filme), class: "btn btn-secondary" %>
+    <%= link_to "Apagar", @filme, data: { turbo_confirm: "Tem certeza?" }, method: :delete, class: "btn btn-danger" %>
+  </p>
+<% end %>
+
+<hr>
+
+<h2>Comentários</h2>
+
+<% if @comentarios.any? %>
+  <ul>
+    <% @comentarios.each do |c| %>
+      <li style="margin-bottom:12px;">
+        <strong><%= c.nome.presence || c.user&.name || "Anônimo" %>:</strong>
+        <%= simple_format(c.conteudo) %>
+        <br>
+        <small><%= l(c.created_at, format: :short) rescue c.created_at.to_s(:short) %></small>
+        <% if user_signed_in? && (c.user_id == current_user.id || @filme.user_id == current_user.id) %>
+          · <%= link_to "remover", filme_comentario_path(@filme, c),
+                        method: :delete, data: { turbo_confirm: "Remover comentário?" } %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>Sem comentários ainda.</p>
+<% end %>
+
+<h3>Adicionar comentário</h3>
+<%= form_with model: [@filme, @comentario], local: true do |f| %>
+  <% unless user_signed_in? %>
+    <div>
+      <%= f.label :nome, "Seu nome (apenas para comentários anônimos)" %><br>
+      <%= f.text_field :nome %>
+    </div>
+  <% end %>
+
+  <div style="margin-top:8px;">
+    <%= f.label :conteudo, "Comentário" %><br>
+    <%= f.text_area :conteudo, rows: 4 %>
+  </div>
+
+  <div style="margin-top:8px;">
+    <%= f.submit "Publicar comentário" %>
+  </div>
+<% end %>
