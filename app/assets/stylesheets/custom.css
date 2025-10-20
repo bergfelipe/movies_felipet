@@ -36,3 +36,16 @@
   letter-spacing: 0.3px;
 }
 
+.badge {
+  font-size: 0.75rem;
+  padding: 0.35em 0.55em;
+  border-radius: 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.badge i {
+  font-size: 0.8rem;
+  vertical-align: middle;
+}
+

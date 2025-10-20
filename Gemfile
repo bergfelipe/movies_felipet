@@ -15,6 +15,8 @@ gem "kaminari"
 gem "faker"
 gem 'simple_form'
 gem "rails-ujs"
+gem "ransack"
+
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"

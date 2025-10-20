@@ -5,8 +5,11 @@ class FilmesController < ApplicationController
 
   # GET /filmes
   def index
-    @filmes = Filme.includes(:user).order(created_at: :desc).page(params[:page]).per(6)
+    @q = Filme.ransack(params[:q])
+    @filmes = @q.result(distinct: true).includes(:categorias).order(created_at: :desc).page(params[:page]).per(6)
+    @categorias = Categoria.order(:nome)
   end
+  
 
   # GET /filmes/1
   def show
@@ -15,9 +18,12 @@ class FilmesController < ApplicationController
   end
 
   def meus
-  @filmes = current_user.filmes.order(created_at: :desc).page(params[:page]).per(6)
-  render :index
-end
+    @q = Filme.ransack(params[:q])
+    @filmes = current_user.filmes.order(created_at: :desc).page(params[:page]).per(6)
+    @categorias = Categoria.order(:nome)
+    render :index
+  end
+  
 
 
   # GET /filmes/new

@@ -1,39 +1,127 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h2 class="fw-bold"><i class="bi bi-film"></i> Catálogo de Filmes</h2>
-  <% if user_signed_in? %>
-    <%= link_to new_filme_path, class: "btn btn-primary" do %>
-      <i class="bi bi-plus-circle"></i> Novo Filme
-    <% end %>
-  <% end %>
 </div>
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <%= search_form_for @q, url: filmes_path, method: :get, html: { class: "row g-3 align-items-end" } do |f| %>
+
+      <div class="col-md-4">
+        <%= f.label :titulo_cont, "Título", class: "form-label" %>
+        <%= f.search_field :titulo_cont, class: "form-control", placeholder: "Buscar por título..." %>
+      </div>
+
+      <div class="col-md-3">
+        <%= f.label :diretor_cont, "Diretor", class: "form-label" %>
+        <%= f.search_field :diretor_cont, class: "form-control", placeholder: "Nome do diretor..." %>
+      </div>
+
+      <div class="col-md-2">
+        <%= f.label :ano_lancamento_eq, "Ano", class: "form-label" %>
+        <%= f.number_field :ano_lancamento_eq, class: "form-control", placeholder: "Ex: 2024" %>
+      </div>
+
+      <div class="col-md-3">
+        <%= f.label :categorias_id_eq, "Categoria", class: "form-label" %>
+        <%= f.collection_select :categorias_id_eq, @categorias, :id, :nome,
+              { include_blank: "Todas" },
+              class: "form-select" %>
+      </div>
+
+      <div class="col-12 text-end mt-3">
+        <%= f.button :submit, class: "btn btn-outline-primary px-4" do %>
+          <i class="bi bi-search"></i> Filtrar
+        <% end %>
+      
+        <%= link_to filmes_path, class: "btn btn-outline-danger ms-2" do %>
+          <i class="bi bi-x-circle"></i> Limpar
+        <% end %>
+      
+        <% if user_signed_in? %>
+          <%= link_to new_filme_path, class: "btn btn-outline-success ms-2" do %>
+            <i class="bi bi-plus-circle"></i> Novo Filme
+          <% end %>
+        <% end %>
+      </div>
+      
+
+    <% end %>
+  </div>
+</div>
+
+<% if @filmes.empty? %>
+  <div class="alert alert-light text-center text-muted mt-3 shadow-sm border rounded-3" role="alert">
+    <i class="bi bi-emoji-frown"></i> Nenhum filme encontrado para os filtros aplicados.
+  </div>
+<% end %>
 
 <div class="row g-4">
   <% @filmes.each do |filme| %>
     <div class="col-md-4">
       <div class="card h-100 shadow-sm border-0">
-          <img src="<%= filme.imagem_url %>" class="card-img-top" alt="<%= filme.titulo %>">
-
+        <img src="<%= filme.imagem_url %>" class="card-img-top" alt="<%= filme.titulo %>">
+      
         <div class="card-body d-flex flex-column">
-          <h5 class="card-title text-primary fw-bold">
+          <h5 class="card-title text-primary fw-bold mb-1">
             <%= filme.titulo %>
           </h5>
+      
+          <!-- Categorias -->
+        <!-- Categorias -->
+<% if filme.categorias.any? %>
+<div class="mb-2">
+  <% categorias_visiveis = filme.categorias.first(3) %>
+
+  <% categorias_visiveis.each do |categoria| %>
+    <% nome = categoria.nome.downcase %>
+    <%# define ícone e cor de acordo com a categoria %>
+    <% icone, cor = case nome
+      when "ação"                then ["bi-lightning-charge-fill", "danger"]
+      when "comédia"             then ["bi-emoji-laughing-fill", "warning"]
+      when "drama"               then ["bi-people-fill", "info"]
+      when "terror"              then ["bi-emoji-dizzy-fill", "dark"]
+      when "romance"             then ["bi-heart-fill", "danger"]
+      when "ficção científica"   then ["bi-rocket-takeoff-fill", "secondary"]
+      when "aventura"            then ["bi-compass-fill", "success"]
+      when "suspense"            then ["bi-eye-fill", "secondary"]
+      when "documentário"        then ["bi-journal-richtext", "primary"]
+      else ["bi-film", "secondary"]
+    end %>
+
+    <span class="badge bg-<%= cor %> bg-opacity-75 me-1" data-bs-toggle="tooltip" title="<%= categoria.nome %>">
+      <i class="bi <%= icone %>"></i> <%= categoria.nome %>
+    </span>
+  <% end %>
+
+  <% if filme.categorias.size > 3 %>
+    <span class="badge bg-light text-muted" data-bs-toggle="tooltip" title="Mais categorias">
+      +<%= filme.categorias.size - 3 %>
+    </span>
+  <% end %>
+</div>
+<% end %>
+
+      
           <p class="card-text text-muted mb-2">
             <i class="bi bi-person-video3"></i> <%= filme.diretor %>
           </p>
+      
           <p class="card-text flex-grow-1">
             <%= truncate(filme.sinopse, length: 100) %>
           </p>
+      
           <div class="mt-auto">
             <%= link_to filme_path(filme), class: "btn btn-outline-primary w-100" do %>
               <i class="bi bi-eye"></i> Ver detalhes
             <% end %>
           </div>
         </div>
+      
         <div class="card-footer bg-white border-0 text-center small text-muted">
           <i class="bi bi-calendar3"></i> <%= filme.ano_lancamento %> · 
           <i class="bi bi-clock"></i> <%= filme.duracao %> min
         </div>
       </div>
+      
     </div>
   <% end %>
 </div>
