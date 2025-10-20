@@ -1,21 +1,44 @@
-<h1>Filmes</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="fw-bold"><i class="bi bi-film"></i> Catálogo de Filmes</h1>
+  <% if user_signed_in? %>
+    <%= link_to new_filme_path, class: "btn btn-primary" do %>
+      <i class="bi bi-plus-circle"></i> Novo Filme
+    <% end %>
+  <% end %>
+</div>
 
-<% if user_signed_in? %>
-  <%= link_to "Novo filme", new_filme_path, class: "btn btn-primary" %>
-<% end %>
-
-<div class="grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:16px;">
+<div class="row g-4">
   <% @filmes.each do |filme| %>
-    <div class="card" style="border:1px solid #eee;padding:12px;border-radius:10px;">
-      <h3><%= link_to filme.titulo, filme %></h3>
-      <p><strong>Diretor:</strong> <%= filme.diretor %></p>
-      <p><strong>Ano:</strong> <%= filme.ano_lancamento %></p>
-      <p><%= truncate(filme.sinopse, length: 120) %></p>
-      <small>Criado por: <%= filme.user&.name || "—" %></small>
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm border-0">
+          <img src="<%= filme.imagem_url %>" class="card-img-top" alt="<%= filme.titulo %>">
+
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title text-primary fw-bold">
+            <%= filme.titulo %>
+          </h5>
+          <p class="card-text text-muted mb-2">
+            <i class="bi bi-person-video3"></i> <%= filme.diretor %>
+          </p>
+          <p class="card-text flex-grow-1">
+            <%= truncate(filme.sinopse, length: 100) %>
+          </p>
+          <div class="mt-auto">
+            <%= link_to filme_path(filme), class: "btn btn-outline-primary w-100" do %>
+              <i class="bi bi-eye"></i> Ver detalhes
+            <% end %>
+          </div>
+        </div>
+        <div class="card-footer bg-white border-0 text-center small text-muted">
+          <i class="bi bi-calendar3"></i> <%= filme.ano_lancamento %> · 
+          <i class="bi bi-clock"></i> <%= filme.duracao %> min
+        </div>
+      </div>
     </div>
   <% end %>
 </div>
 
-<div style="margin-top:16px;">
+<div class="d-flex justify-content-center mt-4">
   <%= paginate @filmes %>
 </div>
+

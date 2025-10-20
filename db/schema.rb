@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_18_170850) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_20_143551) do
   create_table "comentarios", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.text "conteudo"
     t.string "nome"
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.bigint "filme_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -31,6 +31,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_18_170850) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "imagem_url"
     t.index ["user_id"], name: "index_filmes_on_user_id"
   end
 
