@@ -1,0 +1,35 @@
+pt-BR:
+  devise:
+    confirmations:
+      confirmed: "Sua conta foi confirmada com sucesso."
+      send_instructions: "Você receberá um e-mail com instruções para confirmar sua conta em alguns minutos."
+      send_paranoid_instructions: "Se o seu e-mail existir em nosso sistema, você receberá instruções de confirmação em alguns minutos."
+    failure:
+      already_authenticated: "Você já está logado."
+      inactive: "Sua conta ainda não foi ativada."
+      invalid: "E-mail ou senha inválidos."
+      locked: "Sua conta está bloqueada."
+      last_attempt: "Você tem mais uma tentativa antes de sua conta ser bloqueada."
+      not_found_in_database: "E-mail ou senha inválidos."
+      timeout: "Sua sessão expirou. Por favor, entre novamente."
+      unauthenticated: "Você precisa estar logado para continuar."
+      unconfirmed: "Você precisa confirmar seu e-mail antes de continuar."
+    sessions:
+      signed_in: "Login realizado com sucesso! 👋"
+      signed_out: "Você saiu da sua conta. Até logo!"
+      already_signed_out: "Você já estava deslogado."
+    registrations:
+      signed_up: "Conta criada com sucesso! Bem-vindo(a)!"
+      updated: "Sua conta foi atualizada com sucesso."
+      destroyed: "Sua conta foi excluída. Sentiremos sua falta!"
+    passwords:
+      send_instructions: "Você receberá um e-mail com instruções para redefinir sua senha em alguns minutos."
+      updated: "Sua senha foi alterada com sucesso."
+      updated_not_active: "Sua senha foi alterada, mas sua conta ainda não foi ativada."
+    mailer:
+      confirmation_instructions:
+        subject: "Instruções de confirmação de conta"
+      reset_password_instructions:
+        subject: "Instruções para redefinir sua senha"
+      unlock_instructions:
+        subject: "Instruções para desbloquear sua conta"

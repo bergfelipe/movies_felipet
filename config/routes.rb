@@ -1,6 +1,12 @@
-# config/routes.rb
 Rails.application.routes.draw do
   devise_for :users
+
+  # 🚨 Corrige logout via GET (menos seguro, mas funcional em dev)
+  devise_scope :user do
+    get "/users/sign_out", to: "devise/sessions#destroy"
+  end
+  # config/routes.rb
+  get "meus_filmes", to: "filmes#meus", as: :meus_filmes
 
   root "filmes#index"
 

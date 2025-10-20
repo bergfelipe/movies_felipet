@@ -1,3 +1,9 @@
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
-import "@hotwired/turbo-rails"
+// 🚫 Desativa o Turbo
+// import "@hotwired/turbo-rails"
+
+// Ativa o Rails UJS (transforma method: :delete em DELETE)
+import Rails from "@rails/ujs"
+Rails.start()
+
+// Mantém seus controllers JS
 import "controllers"

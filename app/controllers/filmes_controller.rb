@@ -14,6 +14,12 @@ class FilmesController < ApplicationController
     @comentarios = @filme.comentarios # já vem do mais novo pro mais antigo via default_scope
   end
 
+  def meus
+  @filmes = current_user.filmes.order(created_at: :desc).page(params[:page]).per(6)
+  render :index
+end
+
+
   # GET /filmes/new
   def new
     @filme = current_user.filmes.build
