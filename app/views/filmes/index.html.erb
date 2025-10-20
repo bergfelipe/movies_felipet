@@ -37,8 +37,23 @@
     </div>
   <% end %>
 </div>
+<br>
+<% if @filmes.any? %>
+  <div class="text-center text-muted mb-3">
+    <% first_item = (@filmes.current_page - 1) * @filmes.limit_value + 1 %>
+    <% last_item = [@filmes.current_page * @filmes.limit_value, @filmes.total_count].min %>
+    <% total = @filmes.total_count %>
 
-<div class="d-flex justify-content-center mt-4">
+    <% if total > @filmes.limit_value %>
+      Mostrando <strong><%= first_item %>–<%= last_item %></strong> de <strong><%= total %></strong> filmes 🎬
+    <% else %>
+      Mostrando <strong><%= total %></strong> filme<%= "s" if total > 1 %> 🎬
+    <% end %>
+  </div>
+<% end %>
+
+<div class="d-flex justify-content-center ">
+
   <%= paginate @filmes %>
 </div>
 

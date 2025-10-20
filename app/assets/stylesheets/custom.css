@@ -11,3 +11,28 @@
   height: 200px;
   object-fit: cover;
 }
+
+.pagination .page-item .page-link {
+  border-radius: 8px;
+  margin: 0 4px;
+  color: #0d6efd;
+  border: 1px solid #dee2e6;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: white;
+  font-weight: 600;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #adb5bd;
+}
+
+/* app/assets/stylesheets/custom.css */
+.text-muted {
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+}
+

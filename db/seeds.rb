@@ -16,7 +16,7 @@ user = User.create!(
 
 puts "🎬 Criando filmes..."
 filmes = []
-6.times do
+7.times do
   filme = Filme.create!(
    titulo: Faker::Movie.title,
     sinopse: Faker::Lorem.paragraph(sentence_count: 5),
