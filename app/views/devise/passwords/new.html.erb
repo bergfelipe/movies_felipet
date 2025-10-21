@@ -1,18 +1,33 @@
-<h2>Forgot your password?</h2>
+<div class="d-flex justify-content-center align-items-center bg-light">
+  <div class="card shadow-sm border-0 p-4" style="width: 380px;">
+    <h4 class="text-center mb-4 fw-semibold text-dark">Esqueceu sua senha?</h4>
 
-<%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= f.error_notification %>
+    <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name),
+                        html: { method: :post }) do |f| %>
+      <%= f.error_notification %>
 
-  <div class="form-inputs">
-    <%= f.input :email,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "email" } %>
+      <div class="mb-3">
+        <%= f.input :email,
+                    label: "E-mail",
+                    input_html: { class: "form-control form-control-sm text-center", autocomplete: "email" },
+                    required: true %>
+      </div>
+
+     <div class="d-grid text-center">
+  <%= button_tag type: "submit", class: "btn btn-primary btn-sm w-100" do %>
+    <i class="bi bi-envelope-fill me-1"></i> Enviar instruções
+  <% end %>
+
+  <p class="text-muted small mt-2 mb-0">
+    Você receberá um e-mail com instruções para redefinir sua senha.
+  </p>
+</div>
+
+    <% end %>
+
+    <div class="text-center mt-3 small">
+      <%= link_to "Voltar ao login", new_session_path(resource_name), class: "text-decoration-none me-2" %> |
+      <%= link_to "Criar conta", new_registration_path(resource_name), class: "text-decoration-none" %>
+    </div>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Send me reset password instructions" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>

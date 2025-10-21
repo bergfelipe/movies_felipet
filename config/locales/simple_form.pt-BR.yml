@@ -1,0 +1,17 @@
+pt-BR:
+  simple_form:
+    "yes": "Sim"
+    "no": "Não"
+    required:
+      text: "obrigatório"
+      mark: "*"
+    error_notification:
+      default_message: "Por favor, corrija os erros abaixo:"
+    labels:
+      user:
+        email: "E-mail"
+        password: "Senha"
+        password_confirmation: "Confirmação de senha"
+        remember_me: "Lembrar-me"
+        current_password: "Senha atual"
+        name: "Nome"

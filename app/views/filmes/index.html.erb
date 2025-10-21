@@ -28,16 +28,16 @@
       </div>
 
       <div class="col-12 text-end mt-3">
-        <%= f.button :submit, class: "btn btn-outline-primary px-4" do %>
+        <%= f.button :submit, class: "btn btn-outline-primary btn-sm px-4" do %>
           <i class="bi bi-search"></i> Filtrar
         <% end %>
       
-        <%= link_to filmes_path, class: "btn btn-outline-danger ms-2" do %>
+        <%= link_to filmes_path, class: "btn btn-outline-danger btn-sm ms-2" do %>
           <i class="bi bi-x-circle"></i> Limpar
         <% end %>
       
         <% if user_signed_in? %>
-          <%= link_to new_filme_path, class: "btn btn-outline-success ms-2" do %>
+          <%= link_to new_filme_path, class: "btn btn-outline-success btn-sm ms-2" do %>
             <i class="bi bi-plus-circle"></i> Novo Filme
           <% end %>
         <% end %>

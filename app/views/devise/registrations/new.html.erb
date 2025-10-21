@@ -2,6 +2,11 @@
   <div class="col-md-6 col-lg-5">
     <div class="card shadow border-0 rounded-4">
       <div class="card-body p-4">
+ <%= link_to (request.referer || new_session_path(resource_name)), class: "position-absolute top-0 start-0 m-3 text-dark" do %>
+  <i class="bi bi-arrow-left fs-5"></i>
+<% end %>
+
+
         <h2 class="text-center mb-4 fw-bold">
           <i class="bi bi-person-plus-fill text-primary"></i>
           Criar Conta

@@ -2,6 +2,11 @@
   <div class="col-md-5">
     <div class="card shadow border-0 rounded-4">
       <div class="card-body p-4">
+<%= link_to (request.referer || root_path), class: "position-absolute top-0 start-0 m-3 text-dark" do %>
+  <i class="bi bi-arrow-left fs-5"></i>
+<% end %>
+
+
         <h2 class="text-center mb-4 fw-bold">
           <i class="bi bi-person-circle text-primary"></i>
           Entrar na Conta
@@ -40,6 +45,10 @@
         <div class="text-center">
           <p class="mb-1">Esqueceu sua senha? <%= link_to "Recuperar agora", new_password_path(resource_name), class: "text-decoration-none" %></p>
           <p class="mb-0">Ainda não tem conta? <%= link_to "Cadastre-se", new_registration_path(resource_name), class: "fw-bold text-decoration-none text-primary" %></p>
+
+    <div class="text-center mt-3 small">
+      <%= link_to "Voltar ao Home", root_path, class: "text-decoration-none me-2" %> 
+    </div>
         </div>
       </div>
     </div>
