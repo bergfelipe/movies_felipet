@@ -95,21 +95,22 @@
 
 <div class="mt-4">
   <h5 class="fw-semibold"><i class="bi bi-pencil-square"></i> Adicionar comentário</h5>
-  <%= form_with model: [@filme, @comentario], local: true do |f| %>
-    <% unless user_signed_in? %>
-      <div class="mb-2">
-        <%= f.label :nome, "Seu nome (opcional)" %>
-        <%= f.text_field :nome, class: "form-control form-control-sm" %>
-      </div>
-    <% end %>
-
+<%= form_with model: [@filme, @comentario], local: true do |f| %>
+  <% unless user_signed_in? %>
     <div class="mb-2">
-      <%= f.label :conteudo, "Comentário" %>
-      <%= f.text_area :conteudo, rows: 3, class: "form-control form-control-sm" %>
+      <%= f.label :nome, "Seu nome", class: "form-label fw-semibold" %>
+      <%= f.text_field :nome, class: "form-control form-control-sm", required: true, placeholder: "Digite seu nome" %>
     </div>
-
-    <%= f.submit "Publicar comentário", class: "btn btn-primary btn-sm mt-2" %>
   <% end %>
+
+  <div class="mb-2">
+    <%= f.label :conteudo, "Comentário", class: "form-label fw-semibold" %>
+    <%= f.text_area :conteudo, rows: 3, class: "form-control form-control-sm", required: true, placeholder: "Escreva seu comentário..." %>
+  </div>
+
+  <%= f.submit "Publicar comentário", class: "btn btn-primary btn-sm mt-2 px-3" %>
+<% end %>
+
 </div>
 
     </div>
