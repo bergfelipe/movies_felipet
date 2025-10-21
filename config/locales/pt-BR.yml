@@ -87,3 +87,7 @@ pt-BR:
   time:
     formats:
       short: "%d/%m/%Y %H:%M"
+  activerecord:
+    errors:
+      messages:
+        record_invalid: "Registro inválido"
