@@ -75,11 +75,12 @@
     <div class="d-flex flex-wrap gap-2">
       <% @filme.tags.each do |t| %>
         <% cor = case t.nome.downcase
-          when "ação" then "danger"
+          when "ação" then "danger text-dark"
           when "comédia" then "warning text-dark"
           when "drama" then "info"
-          when "romance" then "pink text-dark"
-          when "terror" then "dark"
+          when "romance" then "danger"
+          when "amei" then "danger"
+          when "medo" then "dark"
           when "aventura" then "success"
           when "ficção" then "secondary"
           when "documentário" then "primary"
