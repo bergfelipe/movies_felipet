@@ -79,6 +79,29 @@
       <%= form.text_field :imagem_url, class: "form-control", placeholder: "https://exemplo.com/imagem.jpg" %>
     </div>
 
+<div id="tags-container" class="mb-3">
+  <label class="form-label fw-semibold">Tags</label>
+  <div id="tags-list" class="d-flex flex-wrap mb-2">
+    <% @filme.tags.each do |tag| %>
+      <span class="badge bg-secondary me-2 mb-2 tag-item">
+        <%= tag.nome %>
+        <button type="button" class="btn btn-sm btn-link text-white p-0 ms-1 remove-tag">&times;</button>
+      </span>
+    <% end %>
+  </div>
+
+  <div class="input-group input-group-sm">
+    <input type="text" id="new-tag-input" class="form-control" placeholder="Digite e pressione Enter">
+    <button class="btn btn-outline-secondary" type="button" id="add-tag-btn">
+      <i class="bi bi-plus-circle"></i> Adicionar
+    </button>
+  </div>
+
+  <%= hidden_field_tag "filme[tag_list]", @filme.tags.map(&:nome).join(",") %>
+</div>
+
+
+
     <div class="col-12 text-end mt-4">
  
       <%= form.submit filme.new_record? ? "Cadastrar Filme" : "Atualizar Filme", class: "btn btn-primary px-4" %>
@@ -139,6 +162,50 @@
   }
 });
 
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById("new-tag-input");
+  const addBtn = document.getElementById("add-tag-btn");
+  const list = document.getElementById("tags-list");
+  const hidden = document.querySelector("input[name='filme[tag_list]']");
+
+  const updateHiddenField = () => {
+    const tags = Array.from(list.querySelectorAll(".tag-item"))
+      .map(el => el.textContent.trim().replace("×", "").trim());
+    hidden.value = tags.join(",");
+  };
+
+  const addTag = (tagName) => {
+    tagName = tagName.trim();
+    if (!tagName) return;
+    const exists = Array.from(list.querySelectorAll(".tag-item"))
+      .some(el => el.textContent.trim().toLowerCase() === tagName.toLowerCase());
+    if (exists) return;
+
+    const tag = document.createElement("span");
+    tag.className = "badge bg-secondary me-2 mb-2 tag-item";
+    tag.innerHTML = `${tagName} <button type="button" class="btn btn-sm btn-link text-white p-0 ms-1 remove-tag">&times;</button>`;
+    list.appendChild(tag);
+    input.value = "";
+    updateHiddenField();
+  };
+
+  addBtn.addEventListener("click", () => addTag(input.value));
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addTag(input.value);
+    }
+  });
+
+  list.addEventListener("click", (e) => {
+    if (e.target.classList.contains("remove-tag")) {
+      e.target.closest(".tag-item").remove();
+      updateHiddenField();
+    }
+  });
+});
 
 
 </script>

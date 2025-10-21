@@ -6,6 +6,8 @@ class Filme < ApplicationRecord
   validates :ano_lancamento, numericality: { only_integer: true, greater_than: 1800 }
   validates :duracao, numericality: { only_integer: true, greater_than: 0 }
   validates :imagem_url, presence: false
+  has_and_belongs_to_many :tags
+  attr_accessor :tag_list
 
   def self.ransackable_attributes(_auth_object = nil)
     %w[id titulo diretor ano_lancamento duracao sinopse imagem_url created_at updated_at user_id]

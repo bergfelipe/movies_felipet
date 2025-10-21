@@ -63,7 +63,39 @@
         </div>
       </div>
 
-      <hr class="my-4">
+    <hr class="my-4">
+
+<% if @filme.tags.any? %>
+  <div class="mb-3">
+    <h4 class="fw-semibold mb-3">
+      <i class="bi bi-tags-fill me-2"></i>
+      Tags
+    </h4>
+
+    <div class="d-flex flex-wrap gap-2">
+      <% @filme.tags.each do |t| %>
+        <% cor = case t.nome.downcase
+          when "ação" then "danger"
+          when "comédia" then "warning text-dark"
+          when "drama" then "info"
+          when "romance" then "pink text-dark"
+          when "terror" then "dark"
+          when "aventura" then "success"
+          when "ficção" then "secondary"
+          when "documentário" then "primary"
+          else "secondary"
+        end %>
+
+        <span class="badge bg-<%= cor %> px-3 py-2 shadow-sm">
+          <i class="bi bi-tag-fill me-1"></i> <%= t.nome.capitalize %>
+        </span>
+      <% end %>
+    </div>
+  </div>
+  <hr class="my-4">
+<% end %>
+
+
 
     <h4 class="fw-semibold mb-3"><i class="bi bi-chat-dots"></i> Comentários</h4>
 

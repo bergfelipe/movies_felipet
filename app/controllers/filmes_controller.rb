@@ -31,24 +31,27 @@ class FilmesController < ApplicationController
     @filme = current_user.filmes.build
   end
 
-  # POST /filmes
-  def create
-    @filme = current_user.filmes.build(filme_params)
-    if @filme.save
-      redirect_to @filme, notice: "Filme criado com sucesso."
-    else
-      render :new, status: :unprocessable_entity
-    end
+# POST /filmes
+def create
+  @filme = current_user.filmes.build(filme_params)
+  if @filme.save
+    assign_tags
+    redirect_to @filme, notice: "Filme criado com sucesso."
+  else
+    render :new, status: :unprocessable_entity
   end
+end
 
-  # PATCH/PUT /filmes/1
-  def update
-    if @filme.update(filme_params)
-      redirect_to @filme, notice: "Filme atualizado com sucesso."
-    else
-      render :edit, status: :unprocessable_entity
-    end
+# PATCH/PUT /filmes/1
+def update
+  if @filme.update(filme_params)
+    assign_tags
+    redirect_to @filme, notice: "Filme atualizado com sucesso."
+  else
+    render :edit, status: :unprocessable_entity
   end
+end
+
 
   # DELETE /filmes/1
   def destroy
@@ -62,18 +65,20 @@ class FilmesController < ApplicationController
     @filme = Filme.find(params[:id])
   end
 
-  def filme_params
+def filme_params
   params.require(:filme).permit(
-    :titulo,
-    :sinopse,
-    :ano_lancamento,
-    :duracao,
-    :diretor,
-    :imagem_url,
-    categoria_ids: []
+    :titulo, :sinopse, :ano_lancamento, :duracao,
+    :diretor, :imagem_url,
+    :tag_list,                # 👈 aqui, sem array
+    categoria_ids: []         # múltiplas categorias
   )
 end
 
+def assign_tags
+  tag_list = @filme.tag_list.presence || params[:filme][:tag_list]
+  tag_names = tag_list.to_s.split(",").map(&:strip).reject(&:blank?)
+  @filme.tags = tag_names.map { |name| Tag.find_or_create_by(nome: name.downcase) }
+end
 
   def autoriza_dono!
     return if @filme.user_id == current_user.id
