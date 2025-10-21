@@ -11,9 +11,20 @@
 <br>
 
       <div class="row">
-        <div class="col-md-5">
-          <%= image_tag(@filme.imagem_url, class: "img-fluid rounded shadow-sm mb-3", alt: @filme.titulo) if @filme.imagem_url.present? %>
-        </div>
+      <div class="col-md-5 text-center">
+  <% if @filme.poster.attached? %>
+    <%= image_tag(@filme.poster.variant(resize_to_limit: [500, 700]),
+                  class: "img-fluid rounded shadow-sm mb-3",
+                  alt: @filme.titulo) %>
+  <% elsif @filme.imagem_url.present? %>
+    <%= image_tag(@filme.imagem_url,
+                  class: "img-fluid rounded shadow-sm mb-3",
+                  alt: @filme.titulo) %>
+  <% else %>
+    <div class="text-muted fst-italic mt-3">Sem imagem disponível</div>
+  <% end %>
+</div>
+
         <div class="col-md-7">
           <h2 class="fw-bold text-primary mb-2"><%= @filme.titulo %></h2>
           <p class="text-muted"><i class="bi bi-person-video3"></i> <%= @filme.diretor %></p>

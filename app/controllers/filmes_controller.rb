@@ -68,7 +68,7 @@ end
 def filme_params
   params.require(:filme).permit(
     :titulo, :sinopse, :ano_lancamento, :duracao,
-    :diretor, :imagem_url,
+    :diretor, :imagem_url,  :poster, 
     :tag_list,                # 👈 aqui, sem array
     categoria_ids: []         # múltiplas categorias
   )

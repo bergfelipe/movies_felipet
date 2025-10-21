@@ -74,10 +74,16 @@
 </div>
 
 
-    <div class="col-md-6">
-      <%= form.label :imagem_url, "Imagem (URL)", class: "form-label fw-semibold" %>
-      <%= form.text_field :imagem_url, class: "form-control", placeholder: "https://exemplo.com/imagem.jpg" %>
+  <div class="col-md-6 mb-3">
+  <%= form.label :poster, "Poster do Filme", class: "form-label fw-semibold" %>
+  <%= form.file_field :poster, class: "form-control form-control-sm" %>
+  <% if filme.poster.attached? %>
+    <div class="mt-2">
+      <%= image_tag(filme.poster.variant(resize_to_limit: [300, 300]), class: "img-thumbnail") %>
     </div>
+  <% end %>
+</div>
+
 
 <div id="tags-container" class="mb-3">
   <label class="form-label fw-semibold">Tags</label>

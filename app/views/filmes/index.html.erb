@@ -58,7 +58,16 @@
   <% @filmes.each do |filme| %>
     <div class="col-md-4">
       <div class="card h-100 shadow-sm border-0">
-        <img src="<%= filme.imagem_url %>" class="card-img-top" alt="<%= filme.titulo %>">
+       <% if filme.poster.attached? %>
+  <%= image_tag(filme.poster.variant(resize_to_limit: [400, 600]),
+                class: "card-img-top",
+                alt: filme.titulo) %>
+<% elsif filme.imagem_url.present? %>
+  <img src="<%= filme.imagem_url %>" class="card-img-top" alt="<%= filme.titulo %>">
+<% else %>
+  <div class="bg-light text-muted text-center py-5">Sem imagem</div>
+<% end %>
+
       
         <div class="card-body d-flex flex-column">
           <h5 class="card-title text-primary fw-bold mb-1">
