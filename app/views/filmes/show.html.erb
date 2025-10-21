@@ -1,4 +1,4 @@
-<div class="container my-5">
+<div class="container">
   <div class="card shadow border-0 rounded-4 mx-auto" style="max-width: 850px;">
     <div class="card-body p-4">
 
@@ -6,7 +6,7 @@
         <i class="bi bi-arrow-left fs-5"></i>
       <% end %>
 
-      <br><br>
+      <br>
 
       <div class="row">
         <div class="col-md-5 text-center">
@@ -63,9 +63,14 @@
                 <i class="bi bi-pencil"></i> <%= t(".editar") %>
               <% end %>
 
-              <%= link_to @filme, data: { turbo_confirm: t(".confirmar_exclusao") }, method: :delete, class: "btn btn-outline-danger btn-sm" do %>
-                <i class="bi bi-trash"></i> <%= t(".apagar") %>
+              <%= form_with url: filme_path(@filme), method: :delete, local: true, class: "d-inline" do %>
+                <button type="submit"
+                        class="btn btn-outline-danger btn-sm"
+                        onclick="return confirm('Tem certeza que deseja apagar este filme?');">
+                  <i class="bi bi-trash me-1"></i> <%= t(".apagar") %>
+                </button>
               <% end %>
+              
             </div>
           <% end %>
         </div>
@@ -113,13 +118,15 @@
                 <strong><%= c.nome.presence || c.user&.name || t(".anonimo") %></strong>
 
                 <% if user_signed_in? && (c.user_id == current_user.id || @filme.user_id == current_user.id) %>
-                  <%= link_to filme_comentario_path(@filme, c),
-                              method: :delete,
-                              data: { turbo_confirm: t(".remover_comentario") },
-                              class: "btn btn-outline-danger btn-sm",
-                              title: t(".excluir_comentario") do %>
-                    <i class="bi bi-trash"></i>
-                  <% end %>
+                 <%= form_with url: filme_comentario_path(@filme, c), method: :delete, local: true, class: "d-inline" do %>
+  <button type="submit"
+          class="btn btn-outline-danger btn-sm"
+          title="<%= t('.excluir_comentario', default: 'Excluir comentário') %>"
+          onclick="return confirm('Tem certeza que deseja remover este comentário?');">
+    <i class="bi bi-trash"></i>
+  </button>
+<% end %>
+
                 <% end %>
               </div>
 
