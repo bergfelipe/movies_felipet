@@ -9,6 +9,10 @@ Things you may want to cover:
 
 * System dependencies
 
+    sudo apt update
+    sudo apt install -f
+    sudo apt install libvips
+
 * Configuration
 
 * Database creation

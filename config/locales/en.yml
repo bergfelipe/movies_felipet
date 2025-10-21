@@ -1,31 +1,87 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
   hello: "Hello world"
+  navbar:
+    home: "Home"
+    filmes: "Movies"
+    meus_filmes: "My Movies"
+    sair: "Logout"
+    entrar: "Login"
+    registrar: "Sign Up"
+  filmes:
+   index:
+      catalogo_de_filmes: "Movie Catalog"
+      titulo: "Title"
+      placeholder_titulo: "Search by title..."
+      diretor: "Director"
+      placeholder_diretor: "Director name..."
+      ano: "Year"
+      placeholder_ano: "Ex: 2024"
+      categoria: "Category"
+      todas: "All"
+      filtrar: "Filter"
+      limpar: "Clear"
+      novo_filme: "New Movie"
+      nenhum_filme_encontrado: "No movies found for the selected filters."
+      sem_imagem: "No image"
+      mais_categorias: "More categories"
+      ver_detalhes: "View details"
+      minutos: "min"
+      mostrando_intervalo: "Showing %{first}–%{last} of %{total} movies 🎬"
+      mostrando_total: "Showing %{total} movie%{plural} 🎬"
+      novo: "New Movie"
+      editar: "Edit Movie"
+      detalhes: "Movie Details"
+      voltar: "Back"
+      comentario_placeholder: "Write your comment..."
+      publicar: "Post"
+      catalogo_de_filmes: "Movie Catalog"
+   show:
+      voltar: "Back"
+      sem_imagem: "No image available"
+      ano: "Year"
+      duracao: "Duration"
+      minutos: "min"
+      editar: "Edit"
+      apagar: "Delete"
+      confirmar_exclusao: "Are you sure you want to delete?"
+      tags_titulo: "Tags"
+      comentarios_titulo: "Comments"
+      remover_comentario: "Remove comment?"
+      excluir_comentario: "Delete comment"
+      anonimo: "Anonymous"
+      nenhum_comentario: "There are no comments on this movie yet."
+      adicionar_comentario: "Add a comment"
+      seu_nome: "Your name"
+      placeholder_nome: "Enter your name"
+      comentario: "Comment"
+      placeholder_comentario: "Write your comment..."
+      publicar_comentario: "Post comment"
+   form:
+      erros_titulo:
+        one: "%{count} error prevented saving:"
+        other: "%{count} errors prevented saving:"
+      titulo: "Title"
+      placeholder_titulo: "Ex: The Godfather"
+      diretor: "Director"
+      placeholder_diretor: "Ex: Christopher Nolan"
+      sinopse: "Synopsis"
+      placeholder_sinopse: "Briefly describe the plot..."
+      ano_lancamento: "Release Year"
+      selecione_ano: "Select the year"
+      duracao: "Duration"
+      minutos: "min"
+      ajuste_duracao: "Adjust the movie duration (between 60 and 240 minutes)"
+      categorias: "Categories"
+      escolha_categoria: "Choose a category"
+      adicionar_categoria: "Add category"
+      poster: "Movie Poster"
+      tags: "Tags"
+      placeholder_tag: "Type and press Enter"
+      cadastrar_filme: "Create Movie"
+      atualizar_filme: "Update Movie"
+   new:
+      titulo: "New Movie"
+      voltar: "Back"
+   edit:
+      titulo: "Edit Movie"
+      voltar: "Back"

@@ -2,28 +2,26 @@
   <div class="card shadow border-0 rounded-4 mx-auto" style="max-width: 850px;">
     <div class="card-body p-4">
 
-     
+      <%= link_to filmes_path, class: "position-absolute top-0 start-0 m-3 text-dark" do %>
+        <i class="bi bi-arrow-left fs-5"></i>
+      <% end %>
 
-       <%= link_to filmes_path, class: "position-absolute top-0 start-0 m-3 text-dark" do %>
-  <i class="bi bi-arrow-left fs-5"></i>
-<% end %>
-<br>
-<br>
+      <br><br>
 
       <div class="row">
-      <div class="col-md-5 text-center">
-  <% if @filme.poster.attached? %>
-    <%= image_tag(@filme.poster.variant(resize_to_limit: [500, 700]),
-                  class: "img-fluid rounded shadow-sm mb-3",
-                  alt: @filme.titulo) %>
-  <% elsif @filme.imagem_url.present? %>
-    <%= image_tag(@filme.imagem_url,
-                  class: "img-fluid rounded shadow-sm mb-3",
-                  alt: @filme.titulo) %>
-  <% else %>
-    <div class="text-muted fst-italic mt-3">Sem imagem disponível</div>
-  <% end %>
-</div>
+        <div class="col-md-5 text-center">
+          <% if @filme.poster.attached? %>
+            <%= image_tag(@filme.poster.variant(resize_to_limit: [500, 700]),
+                          class: "img-fluid rounded shadow-sm mb-3",
+                          alt: @filme.titulo) %>
+          <% elsif @filme.imagem_url.present? %>
+            <%= image_tag(@filme.imagem_url,
+                          class: "img-fluid rounded shadow-sm mb-3",
+                          alt: @filme.titulo) %>
+          <% else %>
+            <div class="text-muted fst-italic mt-3"><%= t(".sem_imagem") %></div>
+          <% end %>
+        </div>
 
         <div class="col-md-7">
           <h2 class="fw-bold text-primary mb-2"><%= @filme.titulo %></h2>
@@ -31,131 +29,128 @@
           <p><%= simple_format(@filme.sinopse) %></p>
 
           <ul class="list-unstyled small mt-3">
-            <li><i class="bi bi-calendar3"></i> <strong>Ano:</strong> <%= @filme.ano_lancamento %></li>
-            <li><i class="bi bi-clock"></i> <strong>Duração:</strong> <%= @filme.duracao %> min</li>
+            <li><i class="bi bi-calendar3"></i> <strong><%= t(".ano") %>:</strong> <%= @filme.ano_lancamento %></li>
+            <li><i class="bi bi-clock"></i> <strong><%= t(".duracao") %>:</strong> <%= @filme.duracao %> <%= t(".minutos") %></li>
           </ul>
 
-         <%# === CATEGORIAS === %>
-<% if @filme.categorias.any? %>
-  <p class="mt-3">
-    <% @filme.categorias.each do |c| %>
-      <% nome = c.nome.downcase %>
-      <% icone, cor = case nome
-          when "ação"         then ["bi-lightning-charge-fill", "danger"]
-          when "comédia"      then ["bi-emoji-laughing-fill", "warning"]
-          when "drama"        then ["bi-people-fill", "info"]
-          when "terror"       then ["bi-emoji-dizzy-fill", "dark"]
-          when "romance"      then ["bi-heart-fill", "danger"]
-          when "ficção"       then ["bi-rocket-takeoff-fill", "secondary"]
-          when "aventura"     then ["bi-compass-fill", "success"]
-          when "suspense"     then ["bi-eye-fill", "secondary"]
-          when "documentário" then ["bi-journal-richtext", "primary"]
-          else ["bi-film", "secondary"]
-        end %>
+          <% if @filme.categorias.any? %>
+            <p class="mt-3">
+              <% @filme.categorias.each do |c| %>
+                <% nome = c.nome.downcase %>
+                <% icone, cor = case nome
+                    when "ação"         then ["bi-lightning-charge-fill", "danger"]
+                    when "comédia"      then ["bi-emoji-laughing-fill", "warning"]
+                    when "drama"        then ["bi-people-fill", "info"]
+                    when "terror"       then ["bi-emoji-dizzy-fill", "dark"]
+                    when "romance"      then ["bi-heart-fill", "danger"]
+                    when "ficção"       then ["bi-rocket-takeoff-fill", "secondary"]
+                    when "aventura"     then ["bi-compass-fill", "success"]
+                    when "suspense"     then ["bi-eye-fill", "secondary"]
+                    when "documentário" then ["bi-journal-richtext", "primary"]
+                    else ["bi-film", "secondary"]
+                  end %>
 
-      <span class="badge bg-<%= cor %> text-light me-1 d-inline-flex align-items-center px-2 py-1">
-        <i class="bi <%= icone %> me-1"></i> <%= c.nome.capitalize %>
-      </span>
-    <% end %>
-  </p>
-<% end %>
-
+                <span class="badge bg-<%= cor %> text-light me-1 d-inline-flex align-items-center px-2 py-1">
+                  <i class="bi <%= icone %> me-1"></i> <%= c.nome.capitalize %>
+                </span>
+              <% end %>
+            </p>
+          <% end %>
 
           <% if user_signed_in? && @filme.user_id == current_user.id %>
             <div class="mt-4">
               <%= link_to edit_filme_path(@filme), class: "btn btn-outline-primary btn-sm me-2" do %>
-                <i class="bi bi-pencil"></i> Editar
+                <i class="bi bi-pencil"></i> <%= t(".editar") %>
               <% end %>
-              <%= link_to @filme, data: { turbo_confirm: "Tem certeza que deseja apagar?" }, method: :delete, class: "btn btn-outline-danger btn-sm" do %>
-                <i class="bi bi-trash"></i> Apagar
+
+              <%= link_to @filme, data: { turbo_confirm: t(".confirmar_exclusao") }, method: :delete, class: "btn btn-outline-danger btn-sm" do %>
+                <i class="bi bi-trash"></i> <%= t(".apagar") %>
               <% end %>
             </div>
           <% end %>
         </div>
       </div>
 
-    <hr class="my-4">
+      <hr class="my-4">
 
-<% if @filme.tags.any? %>
-  <div class="mb-3">
-    <h4 class="fw-semibold mb-3">
-      <i class="bi bi-tags-fill me-2"></i>
-      Tags
-    </h4>
+      <% if @filme.tags.any? %>
+        <div class="mb-3">
+          <h4 class="fw-semibold mb-3">
+            <i class="bi bi-tags-fill me-2"></i> <%= t(".tags_titulo") %>
+          </h4>
 
-    <div class="d-flex flex-wrap gap-2">
-      <% @filme.tags.each do |t| %>
-        <% cor = case t.nome.downcase
-          when "ação" then "danger text-dark"
-          when "comédia" then "warning text-dark"
-          when "drama" then "info"
-          when "romance" then "danger"
-          when "amei" then "danger"
-          when "medo" then "dark"
-          when "aventura" then "success"
-          when "ficção" then "secondary"
-          when "documentário" then "primary"
-          else "secondary"
-        end %>
+          <div class="d-flex flex-wrap gap-2">
+            <% @filme.tags.each do |t| %>
+              <% cor = case t.nome.downcase
+                when "ação" then "danger text-dark"
+                when "comédia" then "warning text-dark"
+                when "drama" then "info"
+                when "romance" then "danger"
+                when "amei" then "danger"
+                when "medo" then "dark"
+                when "aventura" then "success"
+                when "ficção" then "secondary"
+                when "documentário" then "primary"
+                else "secondary"
+              end %>
 
-        <span class="badge bg-<%= cor %> px-3 py-2 shadow-sm">
-          <i class="bi bi-tag-fill me-1"></i> <%= t.nome.capitalize %>
-        </span>
-      <% end %>
-    </div>
-  </div>
-  <hr class="my-4">
-<% end %>
-
-
-
-    <h4 class="fw-semibold mb-3"><i class="bi bi-chat-dots"></i> Comentários</h4>
-
-<% if @comentarios.any? %>
-  <ul class="list-unstyled">
-    <% @comentarios.each do |c| %>
-      <li class="mb-3 border-bottom pb-2">
-        <div class="d-flex justify-content-between align-items-center">
-          <strong><%= c.nome.presence || c.user&.name || "Anônimo" %></strong>
-          <% if user_signed_in? && (c.user_id == current_user.id || @filme.user_id == current_user.id) %>
-            <%= link_to filme_comentario_path(@filme, c),
-                        method: :delete,
-                        data: { turbo_confirm: "Remover comentário?" },
-                        class: "btn btn-outline-danger btn-sm",
-                        title: "Excluir comentário" do %>
-              <i class="bi bi-trash"></i>
+              <span class="badge bg-<%= cor %> px-3 py-2 shadow-sm">
+                <i class="bi bi-tag-fill me-1"></i> <%= t.nome.capitalize %>
+              </span>
             <% end %>
-          <% end %>
+          </div>
         </div>
+        <hr class="my-4">
+      <% end %>
 
-        <p class="mb-1"><%= simple_format(c.conteudo) %></p>
-        <small class="text-muted"><%= l(c.created_at, format: :short) rescue c.created_at.to_s(:short) %></small>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p class="text-muted">Ainda não há comentários neste filme.</p>
-<% end %>
+      <h4 class="fw-semibold mb-3"><i class="bi bi-chat-dots"></i> <%= t(".comentarios_titulo") %></h4>
 
-<div class="mt-4">
-  <h5 class="fw-semibold"><i class="bi bi-pencil-square"></i> Adicionar comentário</h5>
-<%= form_with model: [@filme, @comentario], local: true do |f| %>
-  <% unless user_signed_in? %>
-    <div class="mb-2">
-      <%= f.label :nome, "Seu nome", class: "form-label fw-semibold" %>
-      <%= f.text_field :nome, class: "form-control form-control-sm", required: true, placeholder: "Digite seu nome" %>
-    </div>
-  <% end %>
+      <% if @comentarios.any? %>
+        <ul class="list-unstyled">
+          <% @comentarios.each do |c| %>
+            <li class="mb-3 border-bottom pb-2">
+              <div class="d-flex justify-content-between align-items-center">
+                <strong><%= c.nome.presence || c.user&.name || t(".anonimo") %></strong>
 
-  <div class="mb-2">
-    <%= f.label :conteudo, "Comentário", class: "form-label fw-semibold" %>
-    <%= f.text_area :conteudo, rows: 3, class: "form-control form-control-sm", required: true, placeholder: "Escreva seu comentário..." %>
-  </div>
+                <% if user_signed_in? && (c.user_id == current_user.id || @filme.user_id == current_user.id) %>
+                  <%= link_to filme_comentario_path(@filme, c),
+                              method: :delete,
+                              data: { turbo_confirm: t(".remover_comentario") },
+                              class: "btn btn-outline-danger btn-sm",
+                              title: t(".excluir_comentario") do %>
+                    <i class="bi bi-trash"></i>
+                  <% end %>
+                <% end %>
+              </div>
 
-  <%= f.submit "Publicar comentário", class: "btn btn-primary btn-sm mt-2 px-3" %>
-<% end %>
+              <p class="mb-1"><%= simple_format(c.conteudo) %></p>
+              <small class="text-muted"><%= l(c.created_at, format: :short) rescue c.created_at.to_s(:short) %></small>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="text-muted"><%= t(".nenhum_comentario") %></p>
+      <% end %>
 
-</div>
+      <div class="mt-4">
+        <h5 class="fw-semibold"><i class="bi bi-pencil-square"></i> <%= t(".adicionar_comentario") %></h5>
+
+        <%= form_with model: [@filme, @comentario], local: true do |f| %>
+          <% unless user_signed_in? %>
+            <div class="mb-2">
+              <%= f.label :nome, t(".seu_nome"), class: "form-label fw-semibold" %>
+              <%= f.text_field :nome, class: "form-control form-control-sm", required: true, placeholder: t(".placeholder_nome") %>
+            </div>
+          <% end %>
+
+          <div class="mb-2">
+            <%= f.label :conteudo, t(".comentario"), class: "form-label fw-semibold" %>
+            <%= f.text_area :conteudo, rows: 3, class: "form-control form-control-sm", required: true, placeholder: t(".placeholder_comentario") %>
+          </div>
+
+          <%= f.submit t(".publicar_comentario"), class: "btn btn-primary btn-sm mt-2 px-3" %>
+        <% end %>
+      </div>
 
     </div>
   </div>

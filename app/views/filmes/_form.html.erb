@@ -3,7 +3,7 @@
     <div class="alert alert-danger">
       <h5 class="fw-bold mb-2">
         <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        <%= pluralize(filme.errors.count, "erro") %> impediram o salvamento:
+        <%= t(".erros_titulo", count: filme.errors.count) %>
       </h5>
       <ul class="mb-0">
         <% filme.errors.full_messages.each do |msg| %>
@@ -15,102 +15,94 @@
 
   <div class="row g-3">
     <div class="col-md-6">
-      <%= form.label :titulo, "Título", class: "form-label fw-semibold" %>
-      <%= form.text_field :titulo, class: "form-control", placeholder: "Ex: O Poderoso Chefão" %>
+      <%= form.label :titulo, t(".titulo"), class: "form-label fw-semibold" %>
+      <%= form.text_field :titulo, class: "form-control", placeholder: t(".placeholder_titulo") %>
     </div>
 
     <div class="col-md-6">
-      <%= form.label :diretor, "Diretor", class: "form-label fw-semibold" %>
-      <%= form.text_field :diretor, class: "form-control", placeholder: "Ex: Christopher Nolan" %>
+      <%= form.label :diretor, t(".diretor"), class: "form-label fw-semibold" %>
+      <%= form.text_field :diretor, class: "form-control", placeholder: t(".placeholder_diretor") %>
     </div>
 
     <div class="col-md-12">
-      <%= form.label :sinopse, "Sinopse", class: "form-label fw-semibold" %>
-      <%= form.text_area :sinopse, class: "form-control", rows: 4, placeholder: "Descreva brevemente o enredo..." %>
+      <%= form.label :sinopse, t(".sinopse"), class: "form-label fw-semibold" %>
+      <%= form.text_area :sinopse, class: "form-control", rows: 4, placeholder: t(".placeholder_sinopse") %>
     </div>
 
-    <!-- Campo de ano com seleção apenas do ano -->
     <div class="col-md-6">
-      <%= form.label :ano_lancamento, "Ano de lançamento", class: "form-label fw-semibold" %>
+      <%= form.label :ano_lancamento, t(".ano_lancamento"), class: "form-label fw-semibold" %>
       <%= form.select :ano_lancamento,
           options_for_select((1950..Time.current.year + 1).to_a.reverse, filme.ano_lancamento),
-          { prompt: "Selecione o ano" },
+          { prompt: t(".selecione_ano") },
           { class: "form-select" } %>
     </div>
 
-    <!-- Campo de duração com slider moderno -->
     <div class="col-md-6">
-      <%= form.label :duracao, "Duração", class: "form-label fw-semibold" %>
+      <%= form.label :duracao, t(".duracao"), class: "form-label fw-semibold" %>
       <div class="d-flex align-items-center">
         <%= form.range_field :duracao, in: 60..240, step: 5, class: "form-range me-3", id: "duracao-slider" %>
-        <span id="duracao-display" class="fw-semibold text-primary"><%= filme.duracao || 120 %> min</span>
+        <span id="duracao-display" class="fw-semibold text-primary"><%= filme.duracao || 120 %> <%= t(".minutos") %></span>
       </div>
-      <small class="text-muted">Ajuste a duração do filme (entre 60 e 240 minutos)</small>
+      <small class="text-muted"><%= t(".ajuste_duracao") %></small>
     </div>
 
-    <!-- Categorias compactas e dinâmicas -->
-   <div class="col-md-6">
-  <label class="form-label fw-semibold">Categorias</label>
-  <div id="categorias-container">
-    <% (filme.categorias.any? ? filme.categorias : [Categoria.new]).each do |categoria| %>
-      <div class="categoria-field d-flex mb-2">
-        <%= form.collection_select :categoria_ids,
-              Categoria.all,
-              :id,
-              :nome,
-              { prompt: "Escolha uma categoria", selected: categoria.id },
-              { class: "form-select form-select-sm me-2 categoria-select", name: "filme[categoria_ids][]" } %>
+    <div class="col-md-6">
+      <label class="form-label fw-semibold"><%= t(".categorias") %></label>
+      <div id="categorias-container">
+        <% (filme.categorias.any? ? filme.categorias : [Categoria.new]).each do |categoria| %>
+          <div class="categoria-field d-flex mb-2">
+            <%= form.collection_select :categoria_ids,
+                  Categoria.all,
+                  :id,
+                  :nome,
+                  { prompt: t(".escolha_categoria"), selected: categoria.id },
+                  { class: "form-select form-select-sm me-2 categoria-select", name: "filme[categoria_ids][]" } %>
 
-        <button type="button" class="btn btn-sm btn-outline-danger remove-categoria d-flex align-items-center">
-          <i class="bi bi-trash3"></i>
+            <button type="button" class="btn btn-sm btn-outline-danger remove-categoria d-flex align-items-center">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+        <% end %>
+      </div>
+
+      <button type="button" id="add-categoria" class="btn btn-sm btn-outline-info mt-2 d-flex align-items-center">
+        <i class="bi bi-plus-circle me-1"></i> <%= t(".adicionar_categoria") %>
+      </button>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <%= form.label :poster, t(".poster"), class: "form-label fw-semibold" %>
+      <%= form.file_field :poster, class: "form-control form-control-sm" %>
+      <% if filme.poster.attached? %>
+        <div class="mt-2">
+          <%= image_tag(filme.poster.variant(resize_to_limit: [300, 300]), class: "img-thumbnail") %>
+        </div>
+      <% end %>
+    </div>
+
+    <div id="tags-container" class="mb-3">
+      <label class="form-label fw-semibold"><%= t(".tags") %></label>
+      <div id="tags-list" class="d-flex flex-wrap mb-2">
+        <% @filme.tags.each do |tag| %>
+          <span class="badge bg-secondary me-2 mb-2 tag-item">
+            <%= tag.nome %>
+            <button type="button" class="btn btn-sm btn-link text-white p-0 ms-1 remove-tag">&times;</button>
+          </span>
+        <% end %>
+      </div>
+
+      <div class="input-group input-group-sm">
+        <input type="text" id="new-tag-input" class="form-control" placeholder="<%= t('.placeholder_tag') %>">
+        <button class="btn btn-outline-primary" type="button" id="add-tag-btn">
+          <i class="bi bi-plus-circle"></i>
         </button>
       </div>
-    <% end %>
-  </div>
 
-  <button type="button" id="add-categoria" class="btn btn-sm btn-outline-info mt-2 d-flex align-items-center">
-    <i class="bi bi-plus-circle me-1"></i> Adicionar categoria
-  </button>
-</div>
-
-
-  <div class="col-md-6 mb-3">
-  <%= form.label :poster, "Poster do Filme", class: "form-label fw-semibold" %>
-  <%= form.file_field :poster, class: "form-control form-control-sm" %>
-  <% if filme.poster.attached? %>
-    <div class="mt-2">
-      <%= image_tag(filme.poster.variant(resize_to_limit: [300, 300]), class: "img-thumbnail") %>
+      <%= hidden_field_tag "filme[tag_list]", @filme.tags.map(&:nome).join(",") %>
     </div>
-  <% end %>
-</div>
-
-
-<div id="tags-container" class="mb-3">
-  <label class="form-label fw-semibold">Tags</label>
-  <div id="tags-list" class="d-flex flex-wrap mb-2">
-    <% @filme.tags.each do |tag| %>
-      <span class="badge bg-secondary me-2 mb-2 tag-item">
-        <%= tag.nome %>
-        <button type="button" class="btn btn-sm btn-link text-white p-0 ms-1 remove-tag">&times;</button>
-      </span>
-    <% end %>
-  </div>
-
-  <div class="input-group input-group-sm">
-    <input type="text" id="new-tag-input" class="form-control" placeholder="Digite e pressione Enter">
-    <button class="btn btn-outline-primary" type="button" id="add-tag-btn">
-      <i class="bi bi-plus-circle"></i> 
-    </button>
-  </div>
-
-  <%= hidden_field_tag "filme[tag_list]", @filme.tags.map(&:nome).join(",") %>
-</div>
-
-
 
     <div class="col-12 text-end mt-4">
- 
-      <%= form.submit filme.new_record? ? "Cadastrar Filme" : "Atualizar Filme", class: "btn btn-primary px-4" %>
+      <%= form.submit filme.new_record? ? t(".cadastrar_filme") : t(".atualizar_filme"), class: "btn btn-primary px-4" %>
     </div>
   </div>
 <% end %>

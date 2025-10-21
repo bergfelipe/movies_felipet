@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  before_action :set_locale
   # Define o layout dinamicamente
   layout :layout_by_resource
 
@@ -9,6 +10,15 @@ class ApplicationController < ActionController::Base
   add_flash_types :success, :warning
 
   protected
+
+  def set_locale
+    I18n.locale = params[:locale] || I18n.default_locale
+  end
+
+  # adiciona o locale nas URLs
+  def default_url_options
+    { locale: I18n.locale }
+  end
 
   # Escolhe o layout dependendo do tipo de controller
   def layout_by_resource

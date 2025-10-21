@@ -1,48 +1,50 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h2 class="fw-bold"><i class="bi bi-film"></i> Catálogo de Filmes</h2>
+  <h2 class="fw-bold">
+    <i class="bi bi-film"></i> <%= t(".catalogo_de_filmes") %>
+  </h2>
 </div>
+
 <div class="card shadow-sm mb-4">
   <div class="card-body">
     <%= search_form_for @q, url: filmes_path, method: :get, html: { class: "row g-3 align-items-end" } do |f| %>
 
       <div class="col-md-4">
-        <%= f.label :titulo_cont, "Título", class: "form-label" %>
-        <%= f.search_field :titulo_cont, class: "form-control", placeholder: "Buscar por título..." %>
+        <%= f.label :titulo_cont, t(".titulo"), class: "form-label" %>
+        <%= f.search_field :titulo_cont, class: "form-control", placeholder: t(".placeholder_titulo") %>
       </div>
 
       <div class="col-md-3">
-        <%= f.label :diretor_cont, "Diretor", class: "form-label" %>
-        <%= f.search_field :diretor_cont, class: "form-control", placeholder: "Nome do diretor..." %>
+        <%= f.label :diretor_cont, t(".diretor"), class: "form-label" %>
+        <%= f.search_field :diretor_cont, class: "form-control", placeholder: t(".placeholder_diretor") %>
       </div>
 
       <div class="col-md-2">
-        <%= f.label :ano_lancamento_eq, "Ano", class: "form-label" %>
-        <%= f.number_field :ano_lancamento_eq, class: "form-control", placeholder: "Ex: 2024" %>
+        <%= f.label :ano_lancamento_eq, t(".ano"), class: "form-label" %>
+        <%= f.number_field :ano_lancamento_eq, class: "form-control", placeholder: t(".placeholder_ano") %>
       </div>
 
       <div class="col-md-3">
-        <%= f.label :categorias_id_eq, "Categoria", class: "form-label" %>
+        <%= f.label :categorias_id_eq, t(".categoria"), class: "form-label" %>
         <%= f.collection_select :categorias_id_eq, @categorias, :id, :nome,
-              { include_blank: "Todas" },
+              { include_blank: t(".todas") },
               class: "form-select" %>
       </div>
 
       <div class="col-12 text-end mt-3">
         <%= f.button :submit, class: "btn btn-outline-primary btn-sm px-4" do %>
-          <i class="bi bi-search"></i> Filtrar
+          <i class="bi bi-search"></i> <%= t(".filtrar") %>
         <% end %>
       
         <%= link_to filmes_path, class: "btn btn-outline-danger btn-sm ms-2" do %>
-          <i class="bi bi-x-circle"></i> Limpar
+          <i class="bi bi-x-circle"></i> <%= t(".limpar") %>
         <% end %>
       
         <% if user_signed_in? %>
           <%= link_to new_filme_path, class: "btn btn-outline-success btn-sm ms-2" do %>
-            <i class="bi bi-plus-circle"></i> Novo Filme
+            <i class="bi bi-plus-circle"></i> <%= t(".novo_filme") %>
           <% end %>
         <% end %>
       </div>
-      
 
     <% end %>
   </div>
@@ -50,7 +52,7 @@
 
 <% if @filmes.empty? %>
   <div class="alert alert-light text-center text-muted mt-3 shadow-sm border rounded-3" role="alert">
-    <i class="bi bi-emoji-frown"></i> Nenhum filme encontrado para os filtros aplicados.
+    <i class="bi bi-emoji-frown"></i> <%= t(".nenhum_filme_encontrado") %>
   </div>
 <% end %>
 
@@ -58,83 +60,79 @@
   <% @filmes.each do |filme| %>
     <div class="col-md-4">
       <div class="card h-100 shadow-sm border-0">
-       <% if filme.poster.attached? %>
-  <%= image_tag(filme.poster.variant(resize_to_limit: [400, 600]),
-                class: "card-img-top",
-                alt: filme.titulo) %>
-<% elsif filme.imagem_url.present? %>
-  <img src="<%= filme.imagem_url %>" class="card-img-top" alt="<%= filme.titulo %>">
-<% else %>
-  <div class="bg-light text-muted text-center py-5">Sem imagem</div>
-<% end %>
+        <% if filme.poster.attached? %>
+          <%= image_tag(filme.poster.variant(resize_to_limit: [400, 600]),
+                        class: "card-img-top",
+                        alt: filme.titulo) %>
+        <% elsif filme.imagem_url.present? %>
+          <img src="<%= filme.imagem_url %>" class="card-img-top" alt="<%= filme.titulo %>">
+        <% else %>
+          <div class="bg-light text-muted text-center py-5"><%= t(".sem_imagem") %></div>
+        <% end %>
 
-      
         <div class="card-body d-flex flex-column">
           <h5 class="card-title text-primary fw-bold mb-1">
             <%= filme.titulo %>
           </h5>
-      
-          <!-- Categorias -->
-        <!-- Categorias -->
-<% if filme.categorias.any? %>
-<div class="mb-2">
-  <% categorias_visiveis = filme.categorias.first(3) %>
 
-  <% categorias_visiveis.each do |categoria| %>
-    <% nome = categoria.nome.downcase %>
-    <%# define ícone e cor de acordo com a categoria %>
-    <% icone, cor = case nome
-      when "ação"                then ["bi-lightning-charge-fill", "danger"]
-      when "comédia"             then ["bi-emoji-laughing-fill", "warning"]
-      when "drama"               then ["bi-people-fill", "info"]
-      when "terror"              then ["bi-emoji-dizzy-fill", "dark"]
-      when "romance"             then ["bi-heart-fill", "danger"]
-      when "ficção"   then ["bi-rocket-takeoff-fill", "secondary"]
-      when "aventura"            then ["bi-compass-fill", "success"]
-      when "suspense"            then ["bi-eye-fill", "secondary"]
-      when "documentário"        then ["bi-journal-richtext", "primary"]
-      else ["bi-film", "secondary"]
-    end %>
+          <% if filme.categorias.any? %>
+            <div class="mb-2">
+              <% categorias_visiveis = filme.categorias.first(3) %>
 
-    <span class="badge bg-<%= cor %> bg-opacity-75 me-1" data-bs-toggle="tooltip" title="<%= categoria.nome %>">
-      <i class="bi <%= icone %>"></i> <%= categoria.nome %>
-    </span>
-  <% end %>
+              <% categorias_visiveis.each do |categoria| %>
+                <% nome = categoria.nome.downcase %>
+                <% icone, cor = case nome
+                  when "ação" then ["bi-lightning-charge-fill", "danger"]
+                  when "comédia" then ["bi-emoji-laughing-fill", "warning"]
+                  when "drama" then ["bi-people-fill", "info"]
+                  when "terror" then ["bi-emoji-dizzy-fill", "dark"]
+                  when "romance" then ["bi-heart-fill", "danger"]
+                  when "ficção" then ["bi-rocket-takeoff-fill", "secondary"]
+                  when "aventura" then ["bi-compass-fill", "success"]
+                  when "suspense" then ["bi-eye-fill", "secondary"]
+                  when "documentário" then ["bi-journal-richtext", "primary"]
+                  else ["bi-film", "secondary"]
+                end %>
 
-  <% if filme.categorias.size > 3 %>
-    <span class="badge bg-light text-muted" data-bs-toggle="tooltip" title="Mais categorias">
-      +<%= filme.categorias.size - 3 %>
-    </span>
-  <% end %>
-</div>
-<% end %>
+                <span class="badge bg-<%= cor %> bg-opacity-75 me-1" data-bs-toggle="tooltip" title="<%= categoria.nome %>">
+                  <i class="bi <%= icone %>"></i> <%= categoria.nome %>
+                </span>
+              <% end %>
 
-      
+              <% if filme.categorias.size > 3 %>
+                <span class="badge bg-light text-muted" data-bs-toggle="tooltip" title="<%= t('.mais_categorias') %>">
+                  +<%= filme.categorias.size - 3 %>
+                </span>
+              <% end %>
+            </div>
+          <% end %>
+
           <p class="card-text text-muted mb-2">
             <i class="bi bi-person-video3"></i> <%= filme.diretor %>
           </p>
-      
+
           <p class="card-text flex-grow-1">
             <%= truncate(filme.sinopse, length: 100) %>
           </p>
-      
+
           <div class="mt-auto">
             <%= link_to filme_path(filme), class: "btn btn-outline-primary w-100" do %>
-              <i class="bi bi-eye"></i> Ver detalhes
+              <i class="bi bi-eye"></i> <%= t(".ver_detalhes") %>
             <% end %>
           </div>
         </div>
-      
+
         <div class="card-footer bg-white border-0 text-center small text-muted">
           <i class="bi bi-calendar3"></i> <%= filme.ano_lancamento %> · 
-          <i class="bi bi-clock"></i> <%= filme.duracao %> min
+          <i class="bi bi-clock"></i> <%= filme.duracao %> <%= t(".minutos") %>
         </div>
       </div>
-      
     </div>
   <% end %>
 </div>
+
 <br>
+
 <% if @filmes.any? %>
   <div class="text-center text-muted mb-3">
     <% first_item = (@filmes.current_page - 1) * @filmes.limit_value + 1 %>
@@ -142,15 +140,18 @@
     <% total = @filmes.total_count %>
 
     <% if total > @filmes.limit_value %>
-      Mostrando <strong><%= first_item %>–<%= last_item %></strong> de <strong><%= total %></strong> filmes 🎬
+      <%= t(".mostrando_intervalo",
+             first: first_item,
+             last: last_item,
+             total: total) %>
     <% else %>
-      Mostrando <strong><%= total %></strong> filme<%= "s" if total > 1 %> 🎬
+      <%= t(".mostrando_total",
+             total: total,
+             plural: ("s" if total > 1)) %>
     <% end %>
   </div>
 <% end %>
 
-<div class="d-flex justify-content-center ">
-
+<div class="d-flex justify-content-center">
   <%= paginate @filmes %>
 </div>
-

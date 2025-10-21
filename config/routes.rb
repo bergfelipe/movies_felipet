@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  scope "(:locale)", locale: /en|pt-BR/ do
   devise_for :users
 
   # 🚨 Corrige logout via GET (menos seguro, mas funcional em dev)
@@ -13,4 +14,5 @@ Rails.application.routes.draw do
   resources :filmes do
     resources :comentarios, only: [:create, :destroy]
   end
+end
 end
