@@ -63,8 +63,17 @@ class FilmesController < ApplicationController
   end
 
   def filme_params
-    params.require(:filme).permit(:titulo, :sinopse, :ano_lancamento, :duracao, :diretor)
-  end
+  params.require(:filme).permit(
+    :titulo,
+    :sinopse,
+    :ano_lancamento,
+    :duracao,
+    :diretor,
+    :imagem_url,
+    categoria_ids: []
+  )
+end
+
 
   def autoriza_dono!
     return if @filme.user_id == current_user.id

@@ -25,7 +25,7 @@ user2 = User.create!(
 
 # === Categorias ===
 puts "🏷️  Criando categorias..."
-categorias = %w[Ação Drama Comédia Terror Romance Ficção Científica Suspense Aventura Documentário]
+categorias = %w[Ação Drama Comédia Terror Romance Ficção Suspense Aventura Documentário]
 categorias.map! { |nome| Categoria.create!(nome: nome) }
 
 # === Filmes ===

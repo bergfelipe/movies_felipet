@@ -1,10 +1,16 @@
-<h1>Editing filme</h1>
+<div class="container my-5">
+  <div class="card shadow border-0 rounded-4 mx-auto" style="max-width: 800px;">
+    <div class="card-body p-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary mb-0">
+          <i class="bi bi-pencil-square"></i> Editar Filme
+        </h2>
+        <%= link_to (request.referer || filmes_path), class: "btn btn-outline-secondary btn-sm d-flex align-items-center" do %>
+          <i class="bi bi-arrow-left me-1"></i> Voltar
+        <% end %>
+      </div>
 
-<%= render "form", filme: @filme %>
-
-<br>
-
-<div>
-  <%= link_to "Show this filme", @filme %> |
-  <%= link_to "Back to filmes", filmes_path %>
+      <%= render "form", filme: @filme %>
+    </div>
+  </div>
 </div>

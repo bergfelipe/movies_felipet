@@ -1,47 +1,144 @@
-<%= form_with(model: filme) do |form| %>
+<%= form_with(model: filme, class: "card shadow border-0 p-4 mx-auto", style: "max-width: 750px;") do |form| %>
   <% if filme.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(filme.errors.count, "error") %> prohibited this filme from being saved:</h2>
-
-      <ul>
-        <% filme.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+    <div class="alert alert-danger">
+      <h5 class="fw-bold mb-2">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <%= pluralize(filme.errors.count, "erro") %> impediram o salvamento:
+      </h5>
+      <ul class="mb-0">
+        <% filme.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :titulo, style: "display: block" %>
-    <%= form.text_field :titulo %>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <%= form.label :titulo, "Título", class: "form-label fw-semibold" %>
+      <%= form.text_field :titulo, class: "form-control", placeholder: "Ex: O Poderoso Chefão" %>
+    </div>
+
+    <div class="col-md-6">
+      <%= form.label :diretor, "Diretor", class: "form-label fw-semibold" %>
+      <%= form.text_field :diretor, class: "form-control", placeholder: "Ex: Christopher Nolan" %>
+    </div>
+
+    <div class="col-md-12">
+      <%= form.label :sinopse, "Sinopse", class: "form-label fw-semibold" %>
+      <%= form.text_area :sinopse, class: "form-control", rows: 4, placeholder: "Descreva brevemente o enredo..." %>
+    </div>
+
+    <!-- Campo de ano com seleção apenas do ano -->
+    <div class="col-md-6">
+      <%= form.label :ano_lancamento, "Ano de lançamento", class: "form-label fw-semibold" %>
+      <%= form.select :ano_lancamento,
+          options_for_select((1950..Time.current.year + 1).to_a.reverse, filme.ano_lancamento),
+          { prompt: "Selecione o ano" },
+          { class: "form-select" } %>
+    </div>
+
+    <!-- Campo de duração com slider moderno -->
+    <div class="col-md-6">
+      <%= form.label :duracao, "Duração", class: "form-label fw-semibold" %>
+      <div class="d-flex align-items-center">
+        <%= form.range_field :duracao, in: 60..240, step: 5, class: "form-range me-3", id: "duracao-slider" %>
+        <span id="duracao-display" class="fw-semibold text-primary"><%= filme.duracao || 120 %> min</span>
+      </div>
+      <small class="text-muted">Ajuste a duração do filme (entre 60 e 240 minutos)</small>
+    </div>
+
+    <!-- Categorias compactas e dinâmicas -->
+   <div class="col-md-6">
+  <label class="form-label fw-semibold">Categorias</label>
+  <div id="categorias-container">
+    <% (filme.categorias.any? ? filme.categorias : [Categoria.new]).each do |categoria| %>
+      <div class="categoria-field d-flex mb-2">
+        <%= form.collection_select :categoria_ids,
+              Categoria.all,
+              :id,
+              :nome,
+              { prompt: "Escolha uma categoria", selected: categoria.id },
+              { class: "form-select form-select-sm me-2 categoria-select", name: "filme[categoria_ids][]" } %>
+
+        <button type="button" class="btn btn-sm btn-outline-danger remove-categoria d-flex align-items-center">
+          <i class="bi bi-trash3"></i>
+        </button>
+      </div>
+    <% end %>
   </div>
 
-  <div>
-    <%= form.label :sinopse, style: "display: block" %>
-    <%= form.text_area :sinopse %>
-  </div>
+  <button type="button" id="add-categoria" class="btn btn-sm btn-outline-secondary mt-2 d-flex align-items-center">
+    <i class="bi bi-plus-circle me-1"></i> Adicionar categoria
+  </button>
+</div>
 
-  <div>
-    <%= form.label :ano_lancamento, style: "display: block" %>
-    <%= form.number_field :ano_lancamento %>
-  </div>
 
-  <div>
-    <%= form.label :duracao, style: "display: block" %>
-    <%= form.number_field :duracao %>
-  </div>
+    <div class="col-md-6">
+      <%= form.label :imagem_url, "Imagem (URL)", class: "form-label fw-semibold" %>
+      <%= form.text_field :imagem_url, class: "form-control", placeholder: "https://exemplo.com/imagem.jpg" %>
+    </div>
 
-  <div>
-    <%= form.label :diretor, style: "display: block" %>
-    <%= form.text_field :diretor %>
-  </div>
-
-  <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.text_field :user_id %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+    <div class="col-12 text-end mt-4">
+ 
+      <%= form.submit filme.new_record? ? "Cadastrar Filme" : "Atualizar Filme", class: "btn btn-primary px-4" %>
+    </div>
   </div>
 <% end %>
+
+
+
+<script>
+ document.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("categorias-container");
+  const addBtn = document.getElementById("add-categoria");
+  const duracaoSlider = document.getElementById("duracao-slider");
+  const duracaoDisplay = document.getElementById("duracao-display");
+
+  // Atualiza o texto do slider
+  if (duracaoSlider && duracaoDisplay) {
+    duracaoSlider.addEventListener("input", () => {
+      duracaoDisplay.textContent = `${duracaoSlider.value} min`;
+    });
+  }
+
+  // Função para evitar categorias duplicadas
+  const atualizarOpcoes = () => {
+    const selects = container.querySelectorAll("select");
+    const selecionados = Array.from(selects).map((s) => s.value).filter((v) => v);
+    selects.forEach((select) => {
+      Array.from(select.options).forEach((opt) => {
+        opt.disabled = selecionados.includes(opt.value) && opt.value !== select.value;
+      });
+    });
+  };
+
+  if (container && addBtn) {
+    addBtn.addEventListener("click", () => {
+      const firstField = container.querySelector(".categoria-field");
+      const clone = firstField.cloneNode(true);
+      clone.querySelector("select").value = "";
+      container.appendChild(clone);
+      atualizarOpcoes();
+    });
+
+    container.addEventListener("click", (e) => {
+      if (e.target.closest(".remove-categoria")) {
+        const allFields = container.querySelectorAll(".categoria-field");
+        if (allFields.length > 1) {
+          e.target.closest(".categoria-field").remove();
+        } else {
+          alert("Pelo menos uma categoria é necessária!");
+        }
+        atualizarOpcoes();
+      }
+    });
+
+    container.addEventListener("change", atualizarOpcoes);
+    atualizarOpcoes();
+  }
+});
+
+
+
+</script>
