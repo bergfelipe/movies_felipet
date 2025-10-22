@@ -79,6 +79,10 @@ en:
       placeholder_tag: "Type and press Enter"
       cadastrar_filme: "Create Movie"
       atualizar_filme: "Update Movie"
+      label_nome: "Category Name"
+      salvar: "Save"
+      voltar: "Back"
+      preencher resto dos dados com IA: "Fill in the rest of the data with AI"
    new:
       titulo: "New Movie"
       voltar: "Back"
@@ -95,8 +99,4 @@ en:
       apagar: "Delete"
       confirmar_exclusao: "Are you sure you want to delete this category?"
       nenhuma: "No categories found."
-    form:
-      label_nome: "Category Name"
-      salvar: "Save"
-      voltar: "Back"
-      erro: "error"
+    

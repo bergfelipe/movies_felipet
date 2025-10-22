@@ -78,6 +78,11 @@ pt-BR:
       placeholder_tag: "Digite e pressione Enter"
       cadastrar_filme: "Cadastrar Filme"
       atualizar_filme: "Atualizar Filme"
+      label_nome: "Nome da Categoria"
+      salvar: "Salvar"
+      voltar: "Voltar"
+      erro: "erro"
+      preencher resto dos dados com IA: "Preencher resto dos dados com IA"
    new:
       titulo: "Novo Filme"
       voltar: "Voltar"
@@ -101,8 +106,3 @@ pt-BR:
       apagar: "Apagar"
       confirmar_exclusao: "Tem certeza que deseja apagar esta categoria?"
       nenhuma: "Nenhuma categoria cadastrada."
-    form:
-      label_nome: "Nome da Categoria"
-      salvar: "Salvar"
-      voltar: "Voltar"
-      erro: "erro"

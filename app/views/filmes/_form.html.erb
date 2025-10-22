@@ -12,27 +12,30 @@
       </ul>
     </div>
   <% end %>
+
   <div class="row g-3">
     <div class="col-md-6">
-        <%= form.label :titulo, t(".titulo"), class: "form-label fw-semibold" %>
-  <%= form.text_field :titulo, class: "form-control", id: "filme_titulo" %>
+      <%= form.label :titulo, t(".titulo"), class: "form-label fw-semibold" %>
+      <%= form.text_field :titulo, class: "form-control", placeholder: t(".placeholder_titulo"),id: "filme_titulo", required: true %>
 
-  <small
-    id="preencher-ia"
-    data-endpoint="<%= preencher_com_ia_filmes_path %>"
-    style="cursor:pointer;color:#e83e8c;display:block;margin-top:4px;">
-    ✨ Preencher resto dos dados com IA
-  </small>
-</div>
+      <small
+        id="preencher-ia"
+        data-endpoint="<%= preencher_com_ia_filmes_path %>"
+        style="cursor:pointer;color:#e83e8c;display:block;margin-top:4px;">
+        ✨ <%= t(".preencher resto dos dados com IA") %>
+      </small>
+      <small id="ia-feedback" class="text-danger" style="display:none;"></small>
+
+    </div>
 
     <div class="col-md-6">
       <%= form.label :diretor, t(".diretor"), class: "form-label fw-semibold" %>
-      <%= form.text_field :diretor, class: "form-control", placeholder: t(".placeholder_diretor") %>
+      <%= form.text_field :diretor, class: "form-control", placeholder: t(".placeholder_diretor"), required: true %>
     </div>
 
     <div class="col-md-12">
       <%= form.label :sinopse, t(".sinopse"), class: "form-label fw-semibold" %>
-      <%= form.text_area :sinopse, class: "form-control", rows: 4, placeholder: t(".placeholder_sinopse") %>
+      <%= form.text_area :sinopse, class: "form-control", rows: 4, placeholder: t(".placeholder_sinopse"), required: true %>
     </div>
 
     <div class="col-md-6">
@@ -40,14 +43,16 @@
       <%= form.select :ano_lancamento,
           options_for_select((1950..Time.current.year + 1).to_a.reverse, filme.ano_lancamento),
           { prompt: t(".selecione_ano") },
-          { class: "form-select" } %>
+          { class: "form-select", required: true } %>
     </div>
 
     <div class="col-md-6">
       <%= form.label :duracao, t(".duracao"), class: "form-label fw-semibold" %>
       <div class="d-flex align-items-center">
-        <%= form.range_field :duracao, in: 60..240, step: 5, class: "form-range me-3", id: "duracao-slider" %>
-        <span id="duracao-display" class="fw-semibold text-primary"><%= filme.duracao || 120 %> <%= t(".minutos") %></span>
+        <%= form.range_field :duracao, in: 60..240, step: 5, class: "form-range me-3", id: "duracao-slider", required: true %>
+        <span id="duracao-display" class="fw-semibold text-primary">
+          <%= filme.duracao || 120 %> <%= t(".minutos") %>
+        </span>
       </div>
       <small class="text-muted"><%= t(".ajuste_duracao") %></small>
     </div>
@@ -62,7 +67,7 @@
                   :id,
                   :nome,
                   { prompt: t(".escolha_categoria"), selected: categoria.id },
-                  { class: "form-select form-select-sm me-2 categoria-select", name: "filme[categoria_ids][]" } %>
+                  { class: "form-select form-select-sm me-2 categoria-select", name: "filme[categoria_ids][]", required: true } %>
 
             <button type="button" class="btn btn-sm btn-outline-danger remove-categoria d-flex align-items-center">
               <i class="bi bi-trash3"></i>
@@ -112,6 +117,7 @@
     </div>
   </div>
 <% end %>
+
 
 
 
@@ -214,98 +220,112 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </script>
 
-
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const botaoIA = document.querySelector("#preencher-ia");
-  const tituloEl = document.querySelector("#filme_titulo");
-  if (!botaoIA || !tituloEl) return;
-
-  botaoIA.addEventListener("click", async (e) => {
-    e.preventDefault();
-
-    const titulo = (tituloEl.value || "").trim();
-    if (!titulo) return alert("Digite um título primeiro!");
-
-    const endpoint = botaoIA.dataset.endpoint; // URL do botão
-    const csrf = document.querySelector("meta[name='csrf-token']")?.content;
-
-    botaoIA.disabled = true;
-    const original = botaoIA.textContent;
-    botaoIA.textContent = "⏳ Buscando...";
-
-    try {
-      const resp = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "X-CSRF-Token": csrf
-        },
-        body: JSON.stringify({ titulo })
-      });
-
-      const data = await resp.json().catch(() => ({}));
-      console.log("Resposta IA:", data);
-
-      if (!resp.ok || data.error) {
-        alert(data.error || "Erro inesperado da IA.");
-        return;
+  document.addEventListener("DOMContentLoaded", () => {
+    const botaoIA = document.querySelector("#preencher-ia");
+    const tituloEl = document.querySelector("#filme_titulo");
+    const feedback = document.getElementById("ia-feedback");
+    if (!botaoIA || !tituloEl) return;
+  
+    const showErr = (msg) => {
+      if (feedback) {
+        feedback.textContent = msg;
+        feedback.style.display = "block";
+      } else {
+        alert(msg);
       }
-
-      const byId = id => document.getElementById(id);
-
-      // === CAMPOS BÁSICOS ===
-      byId("filme_sinopse") && (byId("filme_sinopse").value = data.sinopse || "");
-      byId("filme_ano_lancamento") && (byId("filme_ano_lancamento").value = data.ano_lancamento || "");
-      byId("filme_diretor") && (byId("filme_diretor").value = data.diretor || "");
-
-      // === DURAÇÃO COM SLIDER ===
-      const duracaoSlider = document.getElementById("duracao-slider");
-      if (duracaoSlider && data.duracao) {
-        // garante número dentro do range
-        const min = parseInt(duracaoSlider.min || "60", 10);
-        const max = parseInt(duracaoSlider.max || "240", 10);
-        const valor = Math.max(min, Math.min(max, parseInt(data.duracao, 10)));
-        duracaoSlider.value = valor;
-
-        // dispara o evento "input" pra atualizar o texto
-        duracaoSlider.dispatchEvent(new Event("input", { bubbles: true }));
-      }
-
-      // === CATEGORIAS ===
-      const sel = byId("filme_categoria_ids");
-      if (sel && Array.isArray(data.categorias)) {
-        const nomes = data.categorias.map(c => String(c).toLowerCase());
-        for (const opt of sel.options) {
-          const txt = opt.text.toLowerCase();
-          opt.selected = nomes.some(n => txt.includes(n));
+    };
+  
+    const hideErr = () => {
+      if (feedback) feedback.style.display = "none";
+    };
+  
+    botaoIA.addEventListener("click", async (e) => {
+      e.preventDefault();
+  
+      const titulo = (tituloEl.value || "").trim();
+      if (!titulo) return showErr("Digite um título primeiro!");
+  
+      const endpoint = botaoIA.dataset.endpoint;
+      const csrf = document.querySelector("meta[name='csrf-token']")?.content;
+  
+      botaoIA.style.pointerEvents = "none";
+      const original = botaoIA.textContent;
+      botaoIA.textContent = "⏳ Buscando dados...";
+  
+      try {
+        const resp = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-CSRF-Token": csrf
+          },
+          body: JSON.stringify({ titulo })
+        });
+  
+        const data = await resp.json().catch(() => ({}));
+        console.log("Resposta IA:", data);
+  
+        if (!resp.ok || data.error) {
+          showErr(data.error || "Erro inesperado da IA.");
+          botaoIA.textContent = original;
+          return;
         }
+  
+        // limpa mensagens de erro
+        hideErr();
+  
+        const byId = id => document.getElementById(id);
+  
+        // === CAMPOS ===
+        byId("filme_sinopse") && (byId("filme_sinopse").value = data.sinopse || "");
+        byId("filme_ano_lancamento") && (byId("filme_ano_lancamento").value = data.ano_lancamento || "");
+        byId("filme_diretor") && (byId("filme_diretor").value = data.diretor || "");
+  
+        // === DURAÇÃO COM SLIDER ===
+        const duracaoSlider = document.getElementById("duracao-slider");
+        const duracaoDisplay = document.getElementById("duracao-display");
+        if (duracaoSlider && data.duracao) {
+          const min = parseInt(duracaoSlider.min || "60", 10);
+          const max = parseInt(duracaoSlider.max || "240", 10);
+          const valor = Math.max(min, Math.min(max, parseInt(data.duracao, 10)));
+          duracaoSlider.value = valor;
+          duracaoDisplay.textContent = `${valor} min`;
+        }
+  
+        // === CATEGORIAS ===
+        const sel = byId("filme_categoria_ids");
+        if (sel && Array.isArray(data.categorias)) {
+          const nomes = data.categorias.map(c => String(c).toLowerCase());
+          for (const opt of sel.options) {
+            const txt = opt.text.toLowerCase();
+            opt.selected = nomes.some(n => txt.includes(n));
+          }
+        }
+  
+        botaoIA.textContent = "✨ Dados preenchidos!";
+        setTimeout(() => (botaoIA.textContent = original), 2000);
+      } catch (err) {
+        console.error("Erro no fetch:", err);
+        showErr("Erro na comunicação com o servidor.");
+        botaoIA.textContent = original;
+      } finally {
+        botaoIA.style.pointerEvents = "auto";
       }
-
-      botaoIA.textContent = "✨ Dados preenchidos!";
-      setTimeout(() => (botaoIA.textContent = original), 1500);
-
-    } catch (err) {
-      console.error("Erro no fetch:", err);
-      alert("Erro na comunicação com o servidor.");
-      botaoIA.textContent = original;
-    } finally {
-      botaoIA.disabled = false;
+    });
+  
+    // === SLIDER listener padrão ===
+    const duracaoSlider = document.getElementById("duracao-slider");
+    const duracaoDisplay = document.getElementById("duracao-display");
+    if (duracaoSlider && duracaoDisplay) {
+      duracaoSlider.addEventListener("input", () => {
+        duracaoDisplay.textContent = `${duracaoSlider.value} min`;
+      });
     }
   });
-
-  // === LISTENER PADRÃO DO SLIDER ===
-  const duracaoSlider = document.getElementById("duracao-slider");
-  const duracaoDisplay = document.getElementById("duracao-display");
-  if (duracaoSlider && duracaoDisplay) {
-    duracaoSlider.addEventListener("input", () => {
-      duracaoDisplay.textContent = `${duracaoSlider.value} min`;
-    });
-  }
-});
-</script>
-
+  </script>
+  
 
 
 

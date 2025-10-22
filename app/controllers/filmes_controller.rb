@@ -10,50 +10,87 @@ class FilmesController < ApplicationController
     @categorias = Categoria.order(:nome)
   end
   
-  # app/controllers/filmes_controller.rb
-def preencher_com_ia
-  titulo = params[:titulo].presence || params.dig(:filme, :titulo)
-  return render json: { error: "Título não informado." }, status: :unprocessable_entity if titulo.blank?
-
-  client = OpenAI::Client.new
-  prompt = <<~PROMPT
-    Você é um especialista em cinema. Retorne um JSON válido com:
-    {
-      "sinopse": "Resumo curto do enredo.",
-      "ano_lancamento": 2008,
-      "duracao": 126,
-      "diretor": "Nome do Diretor",
-      "categorias": ["Ação", "Aventura"]
+  def preencher_com_ia
+    titulo = params[:titulo].presence || params.dig(:filme, :titulo)
+    return render json: { error: "Título não informado." }, status: :unprocessable_entity if titulo.blank?
+  
+    client = OpenAI::Client.new
+  
+    prompt = <<~PROMPT
+      Você é um especialista em cinema.
+      Responda SOMENTE com um JSON válido no formato:
+  
+      {
+        "conhecido": true|false,
+        "titulo_canonico": "Título oficial do filme",
+        "sinopse": "Resumo curto e factual do enredo.",
+        "ano_lancamento": 2008,
+        "duracao": 126,
+        "diretor": "Nome do Diretor",
+        "categorias": ["Ação", "Aventura"]
+      }
+  
+      Regras IMPORTANTES:
+      - Se o título "#{titulo}" NÃO corresponder com alta confiança a um filme real (ex.: presente em IMDb/Wikipedia/TMDb), retorne:
+        { "conhecido": false }
+        e NADA MAIS.
+      - NUNCA invente. Se houver dúvida, retorne {"conhecido": false}.
+      - Preencha todos os campos apenas se "conhecido" for true.
+      - "duracao" deve ser minutos (inteiro, entre 45 e 240).
+      - "ano_lancamento" entre 1900 e #{Time.current.year + 1}.
+      - Categorias em PT-BR (ex.: "Ação", "Drama", "Comédia", "Suspense", "Terror", "Romance", "Ficção", "Aventura", "Documentário").
+    PROMPT
+  
+    response = client.chat(
+      parameters: {
+        model: "gpt-4o-mini",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.1,
+        response_format: { type: "json_object" }
+      }
+    )
+  
+    content = response.dig("choices", 0, "message", "content")
+    dados = JSON.parse(content) rescue {}
+  
+    # --- Guarda de não encontrado / baixa confiança ---
+    if !dados.is_a?(Hash) || dados["conhecido"] != true
+      return render json: {
+        error: "Filme não encontrado. Informe o título completo ou mais detalhes (ex.: ano ou diretor)."
+      }, status: :unprocessable_entity
+    end
+  
+    # --- Sane checks adicionais contra alucinação ---
+    ano = dados["ano_lancamento"].to_i
+    dur = dados["duracao"].to_i
+    diretor = (dados["diretor"] || "").to_s.strip
+    sinopse = (dados["sinopse"] || "").to_s.strip
+  
+    ano_ok = ano.between?(1900, Time.current.year + 1)
+    dur_ok = dur.between?(45, 240)
+    diretor_ok = diretor.length >= 3 && diretor.match?(/[A-Za-zÀ-ÿ]/)
+    sinopse_ok = sinopse.length >= 20 && !sinopse.match?(/desconhecido|n.?o sei|indispon[ií]vel/i)
+  
+    unless ano_ok && dur_ok && diretor_ok && sinopse_ok
+      return render json: {
+        error: "Não consegui confirmar este filme. Refine o título (ex.: ano/diretor) e tente novamente."
+      }, status: :unprocessable_entity
+    end
+  
+    payload = {
+      sinopse:        sinopse,
+      ano_lancamento: ano,
+      duracao:        dur,
+      diretor:        diretor,
+      categorias:     Array(dados["categorias"]).compact
     }
-    Para o filme "#{titulo}". Sempre inclua todas as chaves (pode estimar valores).
-    Responda SOMENTE com JSON.
-  PROMPT
-
-  response = client.chat(
-    parameters: {
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.3,
-      response_format: { type: "json_object" }
-    }
-  )
-
-  content = response.dig("choices", 0, "message", "content")
-  dados = JSON.parse(content) rescue {}
-
-  payload = {
-    sinopse:        dados["sinopse"],
-    ano_lancamento: dados["ano_lancamento"],
-    duracao:        dados["duracao"],
-    diretor:        dados["diretor"],
-    categorias:     Array(dados["categorias"]).compact
-  }
-
-  render json: payload, status: :ok
-rescue => e
-  render json: { error: "Erro ao buscar informações do filme: #{e.message}" }, status: :unprocessable_entity
-end
-
+  
+    render json: payload, status: :ok
+  rescue => e
+    render json: { error: "Erro ao buscar informações do filme: #{e.message}" }, status: :unprocessable_entity
+  end
+  
+  
 
   # GET /filmes/1
   def show
