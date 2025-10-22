@@ -85,3 +85,18 @@ en:
    edit:
       titulo: "Edit Movie"
       voltar: "Back"
+  categorias:
+    index:
+      titulo: "Categories"
+      nova_categoria: "New Category"
+      nome: "Name"
+      acoes: "Actions"
+      editar: "Edit"
+      apagar: "Delete"
+      confirmar_exclusao: "Are you sure you want to delete this category?"
+      nenhuma: "No categories found."
+    form:
+      label_nome: "Category Name"
+      salvar: "Save"
+      voltar: "Back"
+      erro: "error"

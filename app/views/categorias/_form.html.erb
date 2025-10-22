@@ -1,0 +1,28 @@
+<div class="container mt-4" style="max-width: 500px;">
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <%= form_with(model: categoria, local: true) do |f| %>
+        <% if categoria.errors.any? %>
+          <div class="alert alert-danger py-2">
+            <strong><%= pluralize(categoria.errors.count, t(".erro")) %>:</strong>
+            <ul class="mb-0">
+              <% categoria.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="mb-3">
+          <%= f.label :nome, t(".label_nome"), class: "form-label fw-semibold" %>
+          <%= f.text_field :nome, class: "form-control form-control-sm", required: true %>
+        </div>
+
+        <div class="text-end">
+          <%= f.submit t(".salvar"), class: "btn btn-primary btn-sm" %>
+          <%= link_to t(".voltar"), categorias_path, class: "btn btn-secondary btn-sm ms-1" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

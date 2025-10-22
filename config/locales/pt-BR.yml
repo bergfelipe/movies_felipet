@@ -91,3 +91,18 @@ pt-BR:
     errors:
       messages:
         record_invalid: "Registro inválido"
+  categorias:
+    index:
+      titulo: "Categorias"
+      nova_categoria: "Nova Categoria"
+      nome: "Nome"
+      acoes: "Ações"
+      editar: "Editar"
+      apagar: "Apagar"
+      confirmar_exclusao: "Tem certeza que deseja apagar esta categoria?"
+      nenhuma: "Nenhuma categoria cadastrada."
+    form:
+      label_nome: "Nome da Categoria"
+      salvar: "Salvar"
+      voltar: "Voltar"
+      erro: "erro"

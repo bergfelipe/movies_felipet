@@ -56,6 +56,13 @@
                 <% end %>
               </li>
               <li>
+              <%= link_to categorias_path, class: "dropdown-item d-flex align-items-center" do %>
+                <i class="bi bi-tags me-2 text-primary"></i>
+                <span> Categorias </span>
+              <% end %>
+            </li>
+            
+              <li>
                 <%= link_to new_filme_path, class: "dropdown-item" do %>
                   <i class="bi bi-plus-circle me-2 text-success"></i> Novo Filme
                 <% end %>

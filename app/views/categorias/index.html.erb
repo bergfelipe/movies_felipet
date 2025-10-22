@@ -1,0 +1,55 @@
+<div class="container mt-4" style="max-width: 650px;">
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+    <%= link_to (request.referer || filmes_path), class: "position-absolute top-0 start-0 m-3 text-dark" do %>
+      <i class="bi bi-arrow-left fs-5"></i>
+    <% end %>
+    <br>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold text-primary mb-0"><%= t(".titulo") %></h5>
+        <%= link_to t(".nova_categoria"), new_categoria_path, class: "btn btn-outline-success btn-sm" %>
+      </div>
+
+      <% if @categorias.any? %>
+        <div class="table-responsive">
+          <table class="table table-sm table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th><%= t(".nome") %></th>
+                <th class="text-end"><%= t(".acoes") %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @categorias.each do |categoria| %>
+                <tr>
+                  <td><%= categoria.nome %></td>
+                  <td class="text-end">
+                    <%= link_to edit_categoria_path(categoria),
+                                class: "btn btn-outline-primary btn-sm me-1",
+                                title: t(".editar") do %>
+                      <i class="bi bi-pencil"></i>
+                    <% end %>
+
+                    <%= form_with url: categoria_path(categoria),
+                                  method: :delete,
+                                  local: true,
+                                  class: "d-inline" do %>
+                      <button type="submit"
+                              class="btn btn-outline-danger btn-sm"
+                              title="<%= t('.apagar') %>"
+                              onclick="return confirm('<%= t('.confirmar_exclusao') %>');">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-muted mb-0"><%= t(".nenhuma") %></p>
+      <% end %>
+    </div>
+  </div>
+</div>
