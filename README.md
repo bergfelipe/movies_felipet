@@ -134,10 +134,13 @@ Desenvolvedor Full Stack — Ruby on Rails
 
 
 ## 🏁 Execução resumida:
-**rails db:reset             # limpa, recria e popula o banco**
-**sudo apt install libvips   # corrigir exibição de imagens**
-**bundle exec sidekiq        # roda os jobs em background em desenv**
-**rails s                    # inicia o servidor**
+**rails db:reset              # limpa, recria e popula o banco** 
+
+**sudo apt install libvips    # corrigir exibição de imagens**
+
+**bundle exec sidekiq         # roda os jobs em background em desenv**
+
+**rails s                     # inicia o servidor**
 
 
 
