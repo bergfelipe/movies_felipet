@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Movies Felipet</title>
+    <title><%= t("layout.titulo_site") %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- ✅ Bootstrap CSS -->
@@ -16,7 +16,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
-    <!-- ✅ Font Awesome (mais ícones) -->
+    <!-- ✅ Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
@@ -31,78 +31,79 @@
 
   <body class="bg-light d-flex flex-column min-vh-100">
     <!-- ✅ Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-  <div class="container">
-    <%= link_to "🎬 Movies Felipet", root_path, class: "navbar-brand fw-bold" %>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+      <div class="container">
+        <%= link_to "🎬 Movies Felipet", root_path, class: "navbar-brand fw-bold" %>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto align-items-center">
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto align-items-center">
 
-        <% if user_signed_in? %>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-person-circle me-1"></i>
-              <span><%= current_user.name.presence || current_user.email %></span>
-            </a>
+            <% if user_signed_in? %>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-person-circle me-1"></i>
+                  <span><%= current_user.name.presence || current_user.email %></span>
+                </a>
 
-            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
-              <li>
-                <%= link_to edit_user_registration_path, class: "dropdown-item" do %>
-                  <i class="bi bi-gear me-2 text-secondary"></i> Editar Perfil
-                <% end %>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                  <li>
+                    <%= link_to edit_user_registration_path, class: "dropdown-item" do %>
+                      <i class="bi bi-gear me-2 text-secondary"></i> <%= t("layout.editar_perfil") %>
+                    <% end %>
+                  </li>
+                  <li>
+                    <%= link_to categorias_path, class: "dropdown-item d-flex align-items-center" do %>
+                      <i class="bi bi-tags me-2 text-primary"></i>
+                      <span><%= t("layout.categorias") %></span>
+                    <% end %>
+                  </li>
+                  <li>
+                    <%= link_to new_filme_path, class: "dropdown-item" do %>
+                      <i class="bi bi-plus-circle me-2 text-success"></i> <%= t("layout.novo_filme") %>
+                    <% end %>
+                  </li>
+                  <li>
+                    <%= link_to meus_filmes_path, class: "dropdown-item" do %>
+                      <i class="bi bi-collection-play me-2 text-primary"></i> <%= t("layout.meus_filmes") %>
+                    <% end %>
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <%= link_to destroy_user_session_path,
+                                class: "dropdown-item text-danger fw-semibold",
+                                data: { confirm: t("layout.confirmar_saida") } do %>
+                      <i class="bi bi-box-arrow-right me-2"></i> <%= t("layout.sair") %>
+                    <% end %>
+                  </li>
+                </ul>
               </li>
-              <li>
-              <%= link_to categorias_path, class: "dropdown-item d-flex align-items-center" do %>
-                <i class="bi bi-tags me-2 text-primary"></i>
-                <span> Categorias </span>
-              <% end %>
-            </li>
-            
-              <li>
-                <%= link_to new_filme_path, class: "dropdown-item" do %>
-                  <i class="bi bi-plus-circle me-2 text-success"></i> Novo Filme
-                <% end %>
+            <% else %>
+              <li class="nav-item">
+                <%= link_to t("layout.entrar"), new_user_session_path, class: "nav-link" %>
               </li>
-              <li>
-              <%= link_to meus_filmes_path, class: "dropdown-item" do %>
-                <i class="bi bi-collection-play me-2 text-primary"></i> Meus Filmes
-              <% end %>
-              
+              <li class="nav-item">
+                <%= link_to t("layout.cadastrar"), new_user_registration_path, class: "nav-link" %>
               </li>
-              <li><hr class="dropdown-divider"></li>
-              <li>
-                <%= link_to destroy_user_session_path,
-                            class: "dropdown-item text-danger fw-semibold",
-                            data: { confirm: "Deseja sair da conta?" } do %>
-                  <i class="bi bi-box-arrow-right me-2"></i> Sair
-                <% end %>
-              </li>
+            <% end %>
+          </ul>
+
+          <!-- Idioma -->
+          <div class="dropdown ms-3">
+            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              🌍 <%= I18n.locale == :'pt-BR' ? 'Português' : 'English' %>
+            </button>
+            <ul class="dropdown-menu">
+              <li><%= link_to "🇧🇷 Português", url_for(locale: :'pt-BR'), class: "dropdown-item" %></li>
+              <li><%= link_to "🇺🇸 English", url_for(locale: :en), class: "dropdown-item" %></li>
             </ul>
-          </li>
-        <% else %>
-          <li class="nav-item"><%= link_to "Entrar", new_user_session_path, class: "nav-link" %></li>
-          <li class="nav-item"><%= link_to "Cadastrar", new_user_registration_path, class: "nav-link" %></li>
-        <% end %>
-
-      </ul>
-      <div class="dropdown">
-  <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-    🌍 <%= I18n.locale == :'pt-BR' ? 'Português' : 'English' %>
-  </button>
-  <ul class="dropdown-menu">
-    <li><%= link_to "🇧🇷 Português", url_for(locale: :'pt-BR'), class: "dropdown-item" %></li>
-    <li><%= link_to "🇺🇸 English", url_for(locale: :en), class: "dropdown-item" %></li>
-  </ul>
-</div>
-
-    </div>
-  </div>
-</nav>
-
+          </div>
+        </div>
+      </div>
+    </nav>
 
     <!-- ✅ Flash messages -->
     <div class="container mt-3">
@@ -126,17 +127,16 @@
 
     <!-- ✅ Footer -->
     <footer class="bg-dark text-white text-center py-3 mt-auto">
-      <small>Desenvolvido por <strong>Felipe</strong> — <%= Time.now.year %></small>
+      <small><%= t("layout.footer_html", ano: Time.now.year) %></small>
     </footer>
 
-    <!-- ✅ Bootstrap JS (com Popper) -->
+    <!-- ✅ Bootstrap JS -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous">
-    
+    </script>
 
-      </script>
-  <%= javascript_include_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload" %>
   </body>
 </html>
