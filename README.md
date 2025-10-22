@@ -9,7 +9,7 @@ incluindo:**importação em massa via CSV**,
 ---
 ## 🚀 Funcionalidades
 - Cadastro e autenticação de usuários (Devise)
-- IA Treinada excluvisamente para preenchimento dos filmes.
+- IA treinada exclusivamente para preenchimento automático dos filmes.
 - CRUD de filmes, categorias e comentários
 - Associação de múltiplas categorias e tags a um filme
 - Upload de pôster com **Active Storage**
