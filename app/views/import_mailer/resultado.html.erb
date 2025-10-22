@@ -1,0 +1,18 @@
+<h1>Importação de Filmes Concluída ✅</h1>
+
+<p>Olá <%= @user.name %>,</p>
+
+<p>A importação foi finalizada.</p>
+<ul>
+  <li>🎬 Filmes importados com sucesso: <%= @sucesso %></li>
+  <li>⚠️ Filmes com erro: <%= @erros.size %></li>
+</ul>
+
+<% if @erros.any? %>
+  <h3>Detalhes dos erros:</h3>
+  <ul>
+    <% @erros.each do |erro| %>
+      <li><strong><%= erro[:titulo] %>:</strong> <%= erro[:mensagens].join(", ") %></li>
+    <% end %>
+  </ul>
+<% end %>

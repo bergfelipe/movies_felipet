@@ -1,0 +1,12 @@
+<div class="card shadow-sm p-4 mx-auto" style="max-width: 500px;">
+  <h3 class="mb-3 text-center">📂 Importar Filmes (CSV)</h3>
+
+  <%= form_with url: imports_path, local: true, multipart: true do |f| %>
+    <div class="mb-3">
+      <%= f.label :file, "Selecione o arquivo CSV" %>
+      <%= f.file_field :file, class: "form-control" %>
+    </div>
+
+    <%= f.submit "Enviar e Iniciar Importação", class: "btn btn-primary w-100" %>
+  <% end %>
+</div>

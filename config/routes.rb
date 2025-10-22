@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'imports/new'
+  get 'imports/create'
+  get 'imports/show'
+    resources :imports, only: [:new, :create, :show]
     resources :categorias
     scope "(:locale)", locale: /en|pt-BR/ do
     devise_for :users

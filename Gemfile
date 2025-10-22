@@ -17,6 +17,8 @@ gem 'simple_form'
 gem "rails-ujs"
 gem "ransack"
 gem 'image_processing', '~> 1.2'
+gem "sidekiq"
+gem "redis"
 
 
 # Use the Puma web server [https://github.com/puma/puma]
