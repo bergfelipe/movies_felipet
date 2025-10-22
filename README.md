@@ -2,12 +2,14 @@
 
 Aplicação Rails 7 desenvolvida como projeto de portfólio, com funcionalidades completas de gerenciamento de filmes, categorias, tags e comentários — 
 incluindo:**importação em massa via CSV**, 
-          **upload de pôster com Active Storage** e 
-          **processamento em background com Sidekiq**.
+          **upload de pôster com Active Storage**,
+          **processamento em background com Sidekiq** e
+           **preenchimento de filmes com IA**
 
 ---
 ## 🚀 Funcionalidades
 - Cadastro e autenticação de usuários (Devise)
+- IA treinada exclusivamente para preenchimento automático dos filmes.
 - CRUD de filmes, categorias e comentários
 - Associação de múltiplas categorias e tags a um filme
 - Upload de pôster com **Active Storage**
@@ -99,7 +101,7 @@ Ao final, o usuário recebe um e-mail com o resumo da importação.
 
 ## 🧩 Testes automatizados
 
-O projeto possui testes básicos com **Minitest**:
+O projeto possui testes básicos com **Minitest**, pode não funcionar:
 
 rails test
 
@@ -113,21 +115,32 @@ rails test
 - **Sidekiq + Redis**
 - **Action Mailer**
 - **Active Storage**
+- **🧠 Inteligência Artificial**
 
+IA treinada exclusivamente para preenchimento automático dos filmes.
+
+O sistema utiliza o modelo **GPT-4o-mini (OpenAI)** para buscar e preencher
+campos como **sinopse**, **ano de lançamento**, **duração**, **diretor** e **categorias**
+com base apenas no título do filme informado.
+
+Se o título não for encontrado, o sistema solicita mais detalhes ao usuário.
 
 ## 👨‍💻 Autor
 
-**Felipe Fonseca Bosso**  
+**Felipe Bernardo**  
 Desenvolvedor Full Stack — Ruby on Rails  
 📧 [felipe4bfonseca@gmail.com](mailto:felipe4bfonseca@gmail.com)  
 🌐 [github.com/bergfelipe](https://github.com/bergfelipe)
 
 
 ## 🏁 Execução resumida:
-rails db:reset             # limpa, recria e popula o banco
-sudo apt install libvips   # corrigir exibição de imagens
-bundle exec sidekiq        # roda os jobs em background em desenv
-rails s                    # inicia o servidor
+**rails db:reset              # limpa, recria e popula o banco** 
+
+**sudo apt install libvips    # corrigir exibição de imagens**
+
+**bundle exec sidekiq         # roda os jobs em background em desenv**
+
+**rails s                     # inicia o servidor**
 
 
 
