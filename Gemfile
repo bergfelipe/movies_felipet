@@ -7,6 +7,7 @@ gem "rails", "~> 7.1.5", ">= 7.1.5.2"
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
+gem "dotenv-rails", groups: [:development, :test]
 
 
 gem "mysql2", "~> 0.5"
@@ -73,3 +74,5 @@ group :test do
   gem "selenium-webdriver"
   gem "rails-controller-testing"
 end
+
+gem "ruby-openai", "~> 8.3"

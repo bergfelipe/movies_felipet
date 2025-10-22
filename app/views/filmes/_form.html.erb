@@ -12,12 +12,18 @@
       </ul>
     </div>
   <% end %>
-
   <div class="row g-3">
     <div class="col-md-6">
-      <%= form.label :titulo, t(".titulo"), class: "form-label fw-semibold" %>
-      <%= form.text_field :titulo, class: "form-control", placeholder: t(".placeholder_titulo") %>
-    </div>
+        <%= form.label :titulo, t(".titulo"), class: "form-label fw-semibold" %>
+  <%= form.text_field :titulo, class: "form-control", id: "filme_titulo" %>
+
+  <small
+    id="preencher-ia"
+    data-endpoint="<%= preencher_com_ia_filmes_path %>"
+    style="cursor:pointer;color:#e83e8c;display:block;margin-top:4px;">
+    ✨ Preencher resto dos dados com IA
+  </small>
+</div>
 
     <div class="col-md-6">
       <%= form.label :diretor, t(".diretor"), class: "form-label fw-semibold" %>
@@ -207,3 +213,103 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 </script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const botaoIA = document.querySelector("#preencher-ia");
+  const tituloEl = document.querySelector("#filme_titulo");
+  if (!botaoIA || !tituloEl) return;
+
+  botaoIA.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const titulo = (tituloEl.value || "").trim();
+    if (!titulo) return alert("Digite um título primeiro!");
+
+    const endpoint = botaoIA.dataset.endpoint; // URL do botão
+    const csrf = document.querySelector("meta[name='csrf-token']")?.content;
+
+    botaoIA.disabled = true;
+    const original = botaoIA.textContent;
+    botaoIA.textContent = "⏳ Buscando...";
+
+    try {
+      const resp = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "X-CSRF-Token": csrf
+        },
+        body: JSON.stringify({ titulo })
+      });
+
+      const data = await resp.json().catch(() => ({}));
+      console.log("Resposta IA:", data);
+
+      if (!resp.ok || data.error) {
+        alert(data.error || "Erro inesperado da IA.");
+        return;
+      }
+
+      const byId = id => document.getElementById(id);
+
+      // === CAMPOS BÁSICOS ===
+      byId("filme_sinopse") && (byId("filme_sinopse").value = data.sinopse || "");
+      byId("filme_ano_lancamento") && (byId("filme_ano_lancamento").value = data.ano_lancamento || "");
+      byId("filme_diretor") && (byId("filme_diretor").value = data.diretor || "");
+
+      // === DURAÇÃO COM SLIDER ===
+      const duracaoSlider = document.getElementById("duracao-slider");
+      if (duracaoSlider && data.duracao) {
+        // garante número dentro do range
+        const min = parseInt(duracaoSlider.min || "60", 10);
+        const max = parseInt(duracaoSlider.max || "240", 10);
+        const valor = Math.max(min, Math.min(max, parseInt(data.duracao, 10)));
+        duracaoSlider.value = valor;
+
+        // dispara o evento "input" pra atualizar o texto
+        duracaoSlider.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+
+      // === CATEGORIAS ===
+      const sel = byId("filme_categoria_ids");
+      if (sel && Array.isArray(data.categorias)) {
+        const nomes = data.categorias.map(c => String(c).toLowerCase());
+        for (const opt of sel.options) {
+          const txt = opt.text.toLowerCase();
+          opt.selected = nomes.some(n => txt.includes(n));
+        }
+      }
+
+      botaoIA.textContent = "✨ Dados preenchidos!";
+      setTimeout(() => (botaoIA.textContent = original), 1500);
+
+    } catch (err) {
+      console.error("Erro no fetch:", err);
+      alert("Erro na comunicação com o servidor.");
+      botaoIA.textContent = original;
+    } finally {
+      botaoIA.disabled = false;
+    }
+  });
+
+  // === LISTENER PADRÃO DO SLIDER ===
+  const duracaoSlider = document.getElementById("duracao-slider");
+  const duracaoDisplay = document.getElementById("duracao-display");
+  if (duracaoSlider && duracaoDisplay) {
+    duracaoSlider.addEventListener("input", () => {
+      duracaoDisplay.textContent = `${duracaoSlider.value} min`;
+    });
+  }
+});
+</script>
+
+
+
+
+<style>
+  .text-pink { color: #e83e8c; font-weight: 500; }
+  .text-pink:hover { text-decoration: underline; }
+</style>

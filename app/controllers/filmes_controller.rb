@@ -10,6 +10,50 @@ class FilmesController < ApplicationController
     @categorias = Categoria.order(:nome)
   end
   
+  # app/controllers/filmes_controller.rb
+def preencher_com_ia
+  titulo = params[:titulo].presence || params.dig(:filme, :titulo)
+  return render json: { error: "Título não informado." }, status: :unprocessable_entity if titulo.blank?
+
+  client = OpenAI::Client.new
+  prompt = <<~PROMPT
+    Você é um especialista em cinema. Retorne um JSON válido com:
+    {
+      "sinopse": "Resumo curto do enredo.",
+      "ano_lancamento": 2008,
+      "duracao": 126,
+      "diretor": "Nome do Diretor",
+      "categorias": ["Ação", "Aventura"]
+    }
+    Para o filme "#{titulo}". Sempre inclua todas as chaves (pode estimar valores).
+    Responda SOMENTE com JSON.
+  PROMPT
+
+  response = client.chat(
+    parameters: {
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.3,
+      response_format: { type: "json_object" }
+    }
+  )
+
+  content = response.dig("choices", 0, "message", "content")
+  dados = JSON.parse(content) rescue {}
+
+  payload = {
+    sinopse:        dados["sinopse"],
+    ano_lancamento: dados["ano_lancamento"],
+    duracao:        dados["duracao"],
+    diretor:        dados["diretor"],
+    categorias:     Array(dados["categorias"]).compact
+  }
+
+  render json: payload, status: :ok
+rescue => e
+  render json: { error: "Erro ao buscar informações do filme: #{e.message}" }, status: :unprocessable_entity
+end
+
 
   # GET /filmes/1
   def show
