@@ -18,7 +18,4 @@ test:
 
 production:
   <<: *default
-  database: minha_app_production
-  username: <%= ENV["DB_USERNAME"] || "felipet_movies" %>
-  password: <%= ENV["DB_PASSWORD"] || "123456" %>
-  host: <%= ENV["DB_HOST"] || "localhost" %>
+  database: minha_app_development
