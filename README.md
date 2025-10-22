@@ -101,7 +101,7 @@ Ao final, o usuário recebe um e-mail com o resumo da importação.
 
 ## 🧩 Testes automatizados
 
-O projeto possui testes básicos com **Minitest**:
+O projeto possui testes básicos com **Minitest**, pode não funcionar:
 
 rails test
 
@@ -134,10 +134,10 @@ Desenvolvedor Full Stack — Ruby on Rails
 
 
 ## 🏁 Execução resumida:
-rails db:reset             # limpa, recria e popula o banco
-sudo apt install libvips   # corrigir exibição de imagens
-bundle exec sidekiq        # roda os jobs em background em desenv
-rails s                    # inicia o servidor
+**rails db:reset             # limpa, recria e popula o banco**
+**sudo apt install libvips   # corrigir exibição de imagens**
+**bundle exec sidekiq        # roda os jobs em background em desenv**
+**rails s                    # inicia o servidor**
 
 
 
