@@ -92,10 +92,10 @@
                 when "drama"               then ["bi-people-fill", "info"]
                 when "terror"              then ["bi-emoji-dizzy-fill", "dark"]
                 when "romance"             then ["bi-heart-fill", "danger"]
-                when "ficção científica"   then ["bi-rocket-takeoff-fill", "secondary"]
+                when "ficção"              then ["bi-rocket-takeoff-fill", "primary"]
                 when "fantasia"            then ["bi-stars", "primary"]
                 when "musical"             then ["bi-music-note-beamed", "info"]
-                when "guerra"              then ["bi-shield-shaded", "secondary"]
+                when "guerra"              then ["bi-shield-shaded", "warning"]
                 when "faroeste"            then ["bi-horseshoe", "warning"]
                 when "policial / crime"    then ["bi-shield-lock-fill", "dark"]
                 when "mistério / suspense" then ["bi-eye-fill", "secondary"]
@@ -110,6 +110,11 @@
                 <i class="bi <%= icone %>"></i> <%= categoria.nome %>
               </span>
             <% end %>
+             <% if filme.categorias.size > 3 %>
+                <span class="badge bg-light text-muted" data-bs-toggle="tooltip" title="<%= t('.mais_categorias') %>">
+                  +<%= filme.categorias.size - 3 %>
+                </span>
+              <% end %>
           </div>
         <% end %>
   
