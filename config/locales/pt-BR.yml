@@ -106,6 +106,13 @@ pt-BR:
       apagar: "Apagar"
       confirmar_exclusao: "Tem certeza que deseja apagar esta categoria?"
       nenhuma: "Nenhuma categoria cadastrada."
+    form:
+      erro:
+        one: "erro"
+        other: "erros"
+      label_nome: "Nome da Categoria"
+      salvar: "Salvar"
+      voltar: "Voltar"
   layout:
     titulo_site: "Movies Felipet"
     brand: "Movies Felipet"

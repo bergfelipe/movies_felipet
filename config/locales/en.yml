@@ -99,6 +99,13 @@ en:
       apagar: "Delete"
       confirmar_exclusao: "Are you sure you want to delete this category?"
       nenhuma: "No categories found."
+    form:
+      erro:
+        one: "error"
+        other: "errors"
+      label_nome: "Category Name"
+      salvar: "Save"
+      voltar: "Back"
     en:
   layout:
     titulo_site: "Movies Felipet"
