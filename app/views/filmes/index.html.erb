@@ -63,8 +63,6 @@
       <div class="poster-wrapper bg-light d-flex align-items-center justify-content-center rounded-3 overflow-hidden shadow-sm" style="height: 580px;">
         <% if filme.poster.attached? %>
           <%= image_tag(filme.poster.variant(resize_to_fill: [400, 580]), class: "w-100 h-100 object-fit-cover", alt: filme.titulo) %>
-        <% elsif filme.imagem_url.present? %>
-          <img src="<%= filme.imagem_url %>" class="w-100 h-100 object-fit-cover" alt="<%= filme.titulo %>">
         <% else %>
           <div class="text-muted text-center">
             <i class="bi bi-image fs-1 d-block mb-2"></i>
@@ -75,7 +73,46 @@
   
       <div class="card-body d-flex flex-column">
         <h5 class="card-title text-primary fw-bold mb-1"><%= filme.titulo %></h5>
-        <p class="card-text text-muted mb-2"><i class="bi bi-person-video3"></i> <%= filme.diretor %></p>
+        <p class="card-text text-muted mb-1">
+          <i class="bi bi-person-video3"></i> <%= filme.diretor %>
+        </p>
+  
+        <%# 🎬 CATEGORIAS - exibe até 3 badges com ícones e cores %>
+        <% if filme.categorias.any? %>
+          <div class="mb-2">
+            <% categorias_visiveis = filme.categorias.first(3) %>
+  
+            <% categorias_visiveis.each do |categoria| %>
+              <% nome = categoria.nome.downcase %>
+  
+              <% icone, cor = case nome
+                when "ação"                then ["bi-lightning-charge-fill", "danger"]
+                when "aventura"            then ["bi-compass-fill", "success"]
+                when "comédia"             then ["bi-emoji-laughing-fill", "warning"]
+                when "drama"               then ["bi-people-fill", "info"]
+                when "terror"              then ["bi-emoji-dizzy-fill", "dark"]
+                when "romance"             then ["bi-heart-fill", "danger"]
+                when "ficção científica"   then ["bi-rocket-takeoff-fill", "secondary"]
+                when "fantasia"            then ["bi-stars", "primary"]
+                when "musical"             then ["bi-music-note-beamed", "info"]
+                when "guerra"              then ["bi-shield-shaded", "secondary"]
+                when "faroeste"            then ["bi-horseshoe", "warning"]
+                when "policial / crime"    then ["bi-shield-lock-fill", "dark"]
+                when "mistério / suspense" then ["bi-eye-fill", "secondary"]
+                when "documentário"        then ["bi-journal-richtext", "primary"]
+                when "biografia"           then ["bi-person-badge-fill", "success"]
+                when "história"            then ["bi-book-half", "secondary"]
+                when "esporte"             then ["bi-trophy-fill", "warning"]
+                else ["bi-film", "secondary"]
+              end %>
+  
+              <span class="badge bg-<%= cor %> bg-opacity-75 me-1" data-bs-toggle="tooltip" title="<%= categoria.nome %>">
+                <i class="bi <%= icone %>"></i> <%= categoria.nome %>
+              </span>
+            <% end %>
+          </div>
+        <% end %>
+  
         <p class="card-text flex-grow-1"><%= truncate(filme.sinopse, length: 100) %></p>
       </div>
   
@@ -85,6 +122,8 @@
       </div>
     <% end %>
   </div>
+  
+  
   
   <% end %>
 </div>
