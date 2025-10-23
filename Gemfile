@@ -19,6 +19,7 @@ gem "ransack"
 gem 'image_processing', '~> 1.2'
 gem "sidekiq"
 gem "redis"
+gem "aws-sdk-s3", "~> 1.120"
 
 
 # Use the Puma web server [https://github.com/puma/puma]
