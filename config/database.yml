@@ -1,27 +1,30 @@
 default: &default
-  adapter: mysql2
-  encoding: utf8mb4
-  collation: utf8mb4_unicode_ci
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
-  username: felipet_movies
-  password: 123456
-  host: localhost
-  port: 3306
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
   <<: *default
-  database: minha_app_development
+  database: movies_db
+  username: felipet_movies
+  password: 123456
+
+
+development:
+  <<: *default
+  database: movies_db
+
 
 test:
   <<: *default
-  database: minha_app_test
+  database: movies_test
+  username: postgres
+  password:
 
 production:
-  adapter: mysql2
-  encoding: utf8mb4
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  <<: *default
   database: <%= ENV["DB_NAME"] %>
   username: <%= ENV["DB_USER"] %>
   password: <%= ENV["DB_PASSWORD"] %>
   host: <%= ENV["DB_HOST"] %>
-  port: 3306
+  port: 5432

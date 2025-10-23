@@ -9,8 +9,7 @@ gem "rails", "~> 7.1.5", ">= 7.1.5.2"
 gem "sprockets-rails"
 gem "dotenv-rails", groups: [:development, :test]
 
-
-gem "mysql2", "~> 0.5"
+gem 'pg', '~> 1.5'
 gem "devise"
 gem "kaminari"
 gem "faker"
