@@ -17,7 +17,7 @@ module MoviesFelipet
     config.autoload_lib(ignore: %w(assets tasks))
     config.i18n.available_locales = [:en, :'pt-BR']
     config.i18n.default_locale = :'pt-BR'
-    config.active_job.queue_adapter = :sidekiq
+    config.active_job.queue_adapter = :inline
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
