@@ -57,7 +57,7 @@
             </p>
           <% end %>
 
-          
+          <% if user_signed_in? && @filme.user_id == current_user.id %>
             <div class="mt-4">
               <%= link_to edit_filme_path(@filme), class: "btn btn-outline-primary btn-sm me-2" do %>
                 <i class="bi bi-pencil"></i> <%= t(".editar") %>
@@ -72,7 +72,7 @@
               <% end %>
               
             </div>
-          
+           <% end %>
         </div>
       </div>
 
