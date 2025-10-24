@@ -2,6 +2,17 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
+  puts "__________________________________________________________"
+puts "🟡 [DEBUG ENV CHECK] — Iniciando verificação de variáveis..."
+puts "🔸 SENDGRID_API_KEY presente? => #{ENV['SENDGRID_API_KEY'].present?}"
+puts "🔸 AWS_ACCESS_KEY_ID presente? => #{ENV['AWS_ACCESS_KEY_ID'].present?}"
+puts "🔸 AWS_SECRET_ACCESS_KEY presente? => #{ENV['AWS_SECRET_ACCESS_KEY'].present?}"
+puts "🔸 RAILS_ENV => #{Rails.env}"
+puts "🔸 Host atual => #{ENV['RENDER_EXTERNAL_HOSTNAME'] || 'sem variável de host'}"
+puts "__________________________________________________________"
+puts "🚀 Se todos os valores acima estiverem TRUE, variáveis de ambiente OK!"
+puts "⚠️ Caso algum esteja FALSE, verifique no painel do Render (Settings → Environment)"
+puts "__________________________________________________________"
   # 🚀 Recarregamento desativado (ótimo para produção)
   config.enable_reloading = false
   config.eager_load = true
