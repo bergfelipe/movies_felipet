@@ -1,7 +1,7 @@
 class FilmesController < ApplicationController
   before_action :set_filme, only: %i[ show edit update destroy ]
   before_action :authenticate_user!, except: %i[index show]
-
+  before_action :autoriza_dono!, only: %i[ edit update destroy ]
   # GET /filmes
   def index
     @q = Filme.ransack(params[:q])
