@@ -294,6 +294,7 @@ GEM
     ruby-vips (2.2.5)
       ffi (~> 1.12)
       logger
+    ruby_http_client (3.5.5)
     rubyzip (2.4.1)
     securerandom (0.3.2)
     selenium-webdriver (4.26.0)
@@ -302,6 +303,8 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    sendgrid-ruby (6.7.0)
+      ruby_http_client (~> 3.4)
     sidekiq (7.3.9)
       base64
       connection_pool (>= 2.3.0)
@@ -370,6 +373,7 @@ DEPENDENCIES
   redis
   ruby-openai (~> 8.3)
   selenium-webdriver
+  sendgrid-ruby
   sidekiq
   simple_form
   sprockets-rails

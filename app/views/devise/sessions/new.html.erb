@@ -39,6 +39,13 @@
             <%= f.button :submit, "Entrar", class: "btn btn-primary btn-lg fw-bold shadow-sm" %>
           </div>
         <% end %>
+<% if notice.present? || alert.present? %>
+  <div class="alert <%= notice ? 'alert-success' : 'alert-danger' %> alert-dismissible fade show text-center shadow-sm rounded-3" role="alert">
+    <i class="bi <%= notice ? 'bi-check-circle-fill text-success' : 'bi-exclamation-triangle-fill text-danger' %> me-2"></i>
+    <%= notice || alert %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% end %>
 
         <hr>
 
