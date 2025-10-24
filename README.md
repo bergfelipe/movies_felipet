@@ -24,12 +24,15 @@ incluindo:**importação em massa via CSV**,
 
 | Ferramenta | Versão Recomendada |
 |-------------|-------------------|
-| Ruby | 3.0.1 |
+| Ruby | 3.0.6 |
 | Rails | 7.1.5 |
 | Redis | 5.0+ |
 | Node.js / Yarn | Latest |
-| MariaDB ou MySQL | 10.5+ |
+| PostgreSQL | 13.0+ |
+| Amazon S3 (AWS SDK) | Armazenamento de arquivos e imagens |
 
+Observação:
+O Amazon S3 é utilizado para armazenamento de imagens e arquivos enviados pelo usuário. É necessário configurar as variáveis de ambiente AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION e AWS_BUCKET para o funcionamento correto.
 ---
 
 ## 💾 Instalação
@@ -47,10 +50,10 @@ rails db:create db:migrate db:seed
 
 ---
 
-## 🖼️ Corrigir exibição de imagens (Active Storage)
+## 🖼️ Corrigir exibição de imagens (Pequena OBS)
 
 O Active Storage utiliza a gem `image_processing`, que depende da biblioteca **libvips**.
-Se as imagens não aparecerem, execute:
+CASO as imagens não aparecerem, execute:
 
 sudo apt update
 sudo apt install -f
@@ -89,7 +92,7 @@ O CSV deve conter as colunas:
 
 titulo,sinopse,ano_lancamento,duracao,diretor
 
-Exemplo de arquivo (`filmes_exemplo.csv`):
+Exemplo de arquivo que já se econtra no projeto(filmes_exemplo.csv):
 
 titulo,sinopse,ano_lancamento,duracao,diretor
 O Senhor dos Anéis,Uma jornada épica pela Terra Média,2001,180,Peter Jackson
