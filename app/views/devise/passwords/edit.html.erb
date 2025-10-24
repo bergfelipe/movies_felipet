@@ -27,6 +27,13 @@
   <% end %>
 
       </div>
+      <% if notice.present? || alert.present? %>
+  <div class="alert <%= notice ? 'alert-success' : 'alert-danger' %> alert-dismissible fade show text-center shadow-sm rounded-3" role="alert">
+    <i class="bi <%= notice ? 'bi-check-circle-fill text-success' : 'bi-exclamation-triangle-fill text-danger' %> me-2"></i>
+    <%= notice || alert %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% end %>
     <% end %>
 
     <div class="text-center mt-3 small">
