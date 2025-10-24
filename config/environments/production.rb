@@ -48,8 +48,8 @@ Rails.application.configure do
     address:              "smtp.sendgrid.net",
     port:                 587,
     domain:               "movies-felipet.onrender.com",
-    user_name:            "apikey", # literal — não mude!
-    password:             ENV["SENDGRID_API_KEY"],
+    user_name:            "apikey",
+    password:          "<%= ENV['SENDGRID_API_KEY'] %>",
     authentication:       :plain,
     enable_starttls_auto: true
   }
