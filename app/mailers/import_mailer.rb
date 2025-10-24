@@ -1,31 +1,21 @@
-# config/initializers/devise_mailer_patch.rb
-Rails.application.config.to_prepare do
-  class Devise::Mailer < Devise.parent_mailer.constantize
-    include SendGrid
+class ImportMailer < ApplicationMailer
+  default from: "notificacoes@movies.com"
 
-    def devise_mail(record, action, opts = {}, &block)
-      # Monta o HTML manualmente sem depender do Warden
-      begin
-        # Carrega as variáveis do template Devise
-        @resource = record
-        @token = record.send(:set_reset_password_token) if action.to_s == "reset_password_instructions"
+  def resultado
+    @user    = params[:user]
+    @sucesso = params[:sucesso]
+    @erros   = params[:erros]
 
-        # Renderiza o HTML do template (sem request)
-        html_content = ApplicationController.render(
-          template: "devise/mailer/#{action}",
-          assigns: { resource: @resource, token: @token }
-        )
+    # Renderiza o mesmo template de e-mail (HTML)
+    html_content = render_to_string(template: "import_mailer/resultado")
 
-        subject_line = I18n.t("devise.mailer.#{action}.subject", default: "Notificação do Movies")
-
-        SendgridApiMailer.send_email(
-          to: record.email,
-          subject: subject_line,
-          content: html_content
-        )
-      rescue => e
-        Rails.logger.error("❌ Erro ao enviar e-mail Devise via API: #{e.message}")
-      end
-    end
+    # Envia via API HTTPS (funciona no Render Free)
+    SendgridApiMailer.send_email(
+      to: @user.email,
+      subject: "Importação de filmes concluída!",
+      content: html_content
+    )
+  rescue => e
+    Rails.logger.error("❌ Falha ao enviar e-mail de importação: #{e.message}")
   end
 end
