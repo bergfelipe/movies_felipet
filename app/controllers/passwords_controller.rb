@@ -4,7 +4,7 @@ class PasswordsController < Devise::PasswordsController
 
     if resource.nil?
       flash[:alert] = "❌ Nenhum usuário encontrado com esse e-mail."
-      redirect_to new_password_path(resource_name) and return
+      redirect_to new_session_path(resource_name) and return
     end
 
     # Cria um token de redefinição de senha
@@ -81,6 +81,6 @@ HTML
     )
 
     redirect_to new_session_path(resource_name),
-                notice: "📩 Enviamos um link para redefinir sua senha. Verifique sua caixa de entrada!"
+                notice: "📩 Enviamos um link para redefinir sua senha. Verifique sua caixa de entrada e não esqueça de olhar o Spam!"
   end
 end
