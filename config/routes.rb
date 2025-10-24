@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   # Escopo de idioma
   scope "(:locale)", locale: /en|pt-BR/ do
     # Devise (autenticação)
-    devise_for :users
+    devise_for :users, controllers: { passwords: "passwords" }
 
     # 🚨 Logout via GET (funciona bem em dev)
     devise_scope :user do
