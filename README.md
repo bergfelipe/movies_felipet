@@ -134,7 +134,11 @@ Se o título não for encontrado, o sistema solicita mais detalhes ao usuário.
 Desenvolvedor Full Stack — Ruby on Rails  
 📧 [felipe4bfonseca@gmail.com](mailto:felipe4bfonseca@gmail.com)  
 🌐 [github.com/bergfelipe](https://github.com/bergfelipe)
-
+OBS:
+O sistema está hospedado no endereço https://movies-felipet.onrender.com
+, utilizando o plano gratuito da plataforma Render.
+Esse plano disponibiliza apenas 512 MB de memória RAM, o que, durante os testes realizados, ocasionou erros de execução recorrentes devido às limitações de recursos.
+Assim, caso ocorram instabilidades, lentidão ou interrupções, ressalta-se que tais falhas decorrem exclusivamente das restrições impostas pelo ambiente gratuito do Render, e não do código-fonte ou da aplicação em si.
 
 ## 🏁 Execução resumida:
 **rails db:reset              # limpa, recria e popula o banco** 
