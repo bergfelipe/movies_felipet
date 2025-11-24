@@ -46,6 +46,7 @@ bundle install
 yarn install
 
 # Configurar banco de dados
+
 rails db:create db:migrate db:seed
 
 ---
