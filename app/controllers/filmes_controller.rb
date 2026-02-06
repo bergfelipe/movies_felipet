@@ -40,17 +40,16 @@ class FilmesController < ApplicationController
       - Categorias em PT-BR (ex.: "Ação", "Drama", "Comédia", "Suspense", "Terror", "Romance", "Ficção", "Aventura", "Documentário").
     PROMPT
   
-    response = client.chat(
-      parameters: {
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.1,
-        response_format: { type: "json_object" }
-      }
+    response = client.responses.create(
+      model: "gpt-4o-mini",
+      input: prompt,
+      temperature: 0.1,
+      response_format: { type: "json_object" }
     )
-  
-    content = response.dig("choices", 0, "message", "content")
+
+    content = response.output_text
     dados = JSON.parse(content) rescue {}
+
   
     # --- Guarda de não encontrado / baixa confiança ---
     if !dados.is_a?(Hash) || dados["conhecido"] != true
