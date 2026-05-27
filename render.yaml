@@ -13,5 +13,19 @@ services:
     envVars:
       - key: RAILS_MASTER_KEY
         sync: false
-      - key: OPENAI_API_KEY
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_MODEL
+        sync: false
+      - key: OPENROUTER_URI_BASE
+        sync: false
+      - key: OPENROUTER_DATA_COLLECTION
+        sync: false
+      - key: OPENROUTER_ZDR
+        sync: false
+      - key: OPENROUTER_SEND_ATTRIBUTION
+        sync: false
+      - key: OPENROUTER_HTTP_REFERER
+        sync: false
+      - key: OPENROUTER_APP_NAME
         sync: false

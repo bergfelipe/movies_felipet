@@ -15,11 +15,16 @@ class FilmesController < ApplicationController
 
     if OpenAI.configuration.access_token.to_s.strip.blank?
       return render json: {
-        error: "Chave da OpenAI não configurada. Defina OPENAI_API_KEY no ambiente."
+        error: "Chave da OpenRouter não configurada. Defina OPENROUTER_API_KEY no ambiente."
       }, status: :unprocessable_entity
     end
 
     client = OpenAI::Client.new
+    model = ENV.fetch("OPENROUTER_MODEL", "openai/gpt-4o-mini")
+    provider_options = {
+      data_collection: ENV.fetch("OPENROUTER_DATA_COLLECTION", "deny")
+    }
+    provider_options[:zdr] = true if ActiveModel::Type::Boolean.new.cast(ENV.fetch("OPENROUTER_ZDR", "true"))
 
     prompt = <<~PROMPT
       Você é um especialista em cinema.
@@ -48,8 +53,9 @@ class FilmesController < ApplicationController
 
     response = client.chat(
       parameters: {
-        model: "gpt-4o-mini",
+        model: model,
         temperature: 0.1,
+        provider: provider_options,
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: "Você responde apenas JSON válido." },
@@ -84,17 +90,30 @@ class FilmesController < ApplicationController
       }, status: :unprocessable_entity
     end
   
+    categorias = case dados["categorias"]
+                 when Array
+                   dados["categorias"]
+                 when String
+                   dados["categorias"].split(",")
+                 else
+                   []
+                 end
+
     payload = {
       sinopse:        sinopse,
       ano_lancamento: ano,
       duracao:        dur,
       diretor:        diretor,
-      categorias:     Array(dados["categorias"]).compact
+      categorias:     categorias.map { |c| c.to_s.strip }.reject(&:blank?)
     }
 
     render json: payload, status: :ok
   rescue JSON::ParserError
     render json: { error: "A IA retornou conteúdo inválido. Tente novamente." }, status: :unprocessable_entity
+  rescue Faraday::UnauthorizedError
+    render json: { error: "Falha de autenticação com a OpenRouter. Verifique OPENROUTER_API_KEY." }, status: :unprocessable_entity
+  rescue Faraday::TooManyRequestsError
+    render json: { error: "Limite/cota da OpenRouter atingido. Verifique billing e quota do projeto." }, status: :unprocessable_entity
   rescue => e
     render json: { error: "Erro ao buscar informações do filme: #{e.message}" }, status: :unprocessable_entity
   end
