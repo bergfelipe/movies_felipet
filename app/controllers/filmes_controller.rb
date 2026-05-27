@@ -12,9 +12,15 @@ class FilmesController < ApplicationController
   def preencher_com_ia
     titulo = params[:titulo].presence || params.dig(:filme, :titulo)
     return render json: { error: "Título não informado." }, status: :unprocessable_entity if titulo.blank?
-  
+
+    if OpenAI.configuration.access_token.to_s.strip.blank?
+      return render json: {
+        error: "Chave da OpenAI não configurada. Defina OPENAI_API_KEY no ambiente."
+      }, status: :unprocessable_entity
+    end
+
     client = OpenAI::Client.new
-  
+
     prompt = <<~PROMPT
       Você é um especialista em cinema.
       Responda SOMENTE com um JSON válido no formato:
@@ -39,18 +45,21 @@ class FilmesController < ApplicationController
       - "ano_lancamento" entre 1900 e #{Time.current.year + 1}.
       - Categorias em PT-BR (ex.: "Ação", "Drama", "Comédia", "Suspense", "Terror", "Romance", "Ficção", "Aventura", "Documentário").
     PROMPT
-  
-    response = client.responses.create(
-      model: "gpt-4o-mini",
-      input: prompt,
-      temperature: 0.1,
-      response_format: { type: "json_object" }
+
+    response = client.chat(
+      parameters: {
+        model: "gpt-4o-mini",
+        temperature: 0.1,
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: "Você responde apenas JSON válido." },
+          { role: "user", content: prompt }
+        ]
+      }
     )
+    content = response.dig("choices", 0, "message", "content").to_s
+    dados = JSON.parse(content)
 
-    content = response.output_text
-    dados = JSON.parse(content) rescue {}
-
-  
     # --- Guarda de não encontrado / baixa confiança ---
     if !dados.is_a?(Hash) || dados["conhecido"] != true
       return render json: {
@@ -82,8 +91,10 @@ class FilmesController < ApplicationController
       diretor:        diretor,
       categorias:     Array(dados["categorias"]).compact
     }
-  
+
     render json: payload, status: :ok
+  rescue JSON::ParserError
+    render json: { error: "A IA retornou conteúdo inválido. Tente novamente." }, status: :unprocessable_entity
   rescue => e
     render json: { error: "Erro ao buscar informações do filme: #{e.message}" }, status: :unprocessable_entity
   end
