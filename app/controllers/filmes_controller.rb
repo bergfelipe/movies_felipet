@@ -164,8 +164,17 @@ end
 
   # DELETE /filmes/1
   def destroy
-    @filme.destroy
+    @filme.destroy!
     redirect_to filmes_url, notice: "Filme apagado com sucesso."
+  rescue Aws::S3::Errors::ServiceError => e
+    Rails.logger.error("Falha ao apagar arquivo no S3 para Filme##{@filme.id}: #{e.class} - #{e.message}")
+
+    # Se o objeto no S3 estiver inacessível, destacamos o attachment para
+    # permitir remover o registro sem quebrar a UX com erro 500.
+    @filme.poster.detach if @filme.poster.attached?
+    @filme.destroy!
+
+    redirect_to filmes_url, alert: "Filme removido, mas não foi possível apagar a imagem antiga no S3."
   end
 
   private
