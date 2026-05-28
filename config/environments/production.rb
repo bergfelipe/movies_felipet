@@ -61,4 +61,7 @@ Rails.application.configure do
 
   # 🚫 Não exporta schema após migrations
   config.active_record.dump_schema_after_migration = false
+
+  # Evita que jobs inline de análise/purge do Active Storage derrubem a request web.
+  config.active_job.queue_adapter = :async
 end

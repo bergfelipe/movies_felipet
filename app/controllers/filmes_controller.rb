@@ -149,6 +149,18 @@ def create
   else
     render :new, status: :unprocessable_entity
   end
+rescue Aws::S3::Errors::ServiceError => e
+  Rails.logger.error(
+    "Erro S3 no create de Filme: #{e.class} - #{e.message} | " \
+    "bucket=#{ENV['AWS_BUCKET']} region=#{ENV['AWS_REGION']} endpoint=#{ENV['AWS_S3_ENDPOINT']}"
+  )
+
+  if @filme&.persisted?
+    redirect_to @filme, alert: "Filme salvo, mas houve erro no upload/análise da imagem no S3."
+  else
+    @filme.errors.add(:poster, "falhou no S3. Verifique bucket/região/permissões da AWS.")
+    render :new, status: :unprocessable_entity
+  end
 end
 
 # PATCH/PUT /filmes/1
@@ -159,6 +171,12 @@ def update
   else
     render :edit, status: :unprocessable_entity
   end
+rescue Aws::S3::Errors::ServiceError => e
+  Rails.logger.error(
+    "Erro S3 no update de Filme##{@filme&.id}: #{e.class} - #{e.message} | " \
+    "bucket=#{ENV['AWS_BUCKET']} region=#{ENV['AWS_REGION']} endpoint=#{ENV['AWS_S3_ENDPOINT']}"
+  )
+  redirect_to edit_filme_path(@filme), alert: "Erro ao processar imagem no S3. Verifique bucket/região/permissões."
 end
 
 
