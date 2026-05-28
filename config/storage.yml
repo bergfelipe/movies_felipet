@@ -6,7 +6,7 @@ amazon:
   service: S3
   access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
   secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
-  region: <%= ENV.fetch("AWS_REGION", "us-east-2") %>
+  region: <%= ENV["AWS_REGION"].to_s.strip.presence || "us-east-2" %>
   bucket: <%= ENV["AWS_BUCKET"] %>
-  endpoint: <%= ENV.fetch("AWS_S3_ENDPOINT", "https://s3.us-east-2.amazonaws.com") %>
-  force_path_style: <%= ENV.fetch("AWS_S3_FORCE_PATH_STYLE", "false").to_s == "true" %>
+  endpoint: "https://s3.us-east-2.amazonaws.com"
+  force_path_style: false
